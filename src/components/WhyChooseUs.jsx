@@ -1,4 +1,5 @@
 import FeatureCard from "@/components/FeatureCard";
+import Reveal from "@/components/Reveal";
 import { reasons } from "@/data/whyChooseUs";
 
 export default function WhyChooseUs() {
@@ -14,12 +15,15 @@ export default function WhyChooseUs() {
 
         {/* 1 card per row on phones, 2 on tablets, 3 on desktop (last row centred) */}
         <ul className="mt-8 flex flex-wrap justify-center gap-6 lg:mt-12">
-          {reasons.map((reason) => (
+          {reasons.map((reason, index) => (
             <li
               key={reason.id}
               className="w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc((100%-3rem)/3)]"
             >
-              <FeatureCard feature={reason} />
+              {/* Each card appears as it scrolls into view, one after another along the row */}
+              <Reveal delay={(index % 3) * 120} className="grid h-full">
+                <FeatureCard feature={reason} />
+              </Reveal>
             </li>
           ))}
         </ul>

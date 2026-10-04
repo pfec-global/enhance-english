@@ -3,9 +3,10 @@ import Link from "next/link";
 import { ArrowRightIcon } from "@/components/icons";
 
 // Each statue sits in a box that hides its bottom part, so it looks like it
-// rises from the yellow line at the bottom of the section.
+// rises from the yellow line at the bottom of the section (on phones and tablets
+// the first one rises from the top edge of the card instead).
 const statue =
-  "relative row-start-2 w-full self-end overflow-hidden lg:row-start-1";
+  "relative w-full justify-self-center self-end overflow-hidden lg:row-start-1";
 
 export default function CustomCourse() {
   return (
@@ -14,13 +15,13 @@ export default function CustomCourse() {
       className="overflow-hidden border-b-[0.3125rem] border-brand-yellow bg-linear-to-b from-surface to-[#fff1e0]"
     >
       {/*
-        phones, tablets: the card, then the two statues side by side below it
+        phones, tablets: one statue above the card, the other below it, both centred
         desktop:         statue · card · statue in one row
                          (on small laptops the card narrows so the statues keep some size)
       */}
-      <div className="site-container grid grid-cols-2 gap-x-6 gap-y-8 pt-10 lg:grid-cols-[minmax(12.5rem,1fr)_minmax(0,46.7rem)_minmax(12.5rem,1fr)] lg:gap-x-7 lg:pt-9">
+      <div className="site-container grid pt-10 lg:grid-cols-[minmax(12.5rem,1fr)_minmax(0,46.7rem)_minmax(12.5rem,1fr)] lg:gap-x-7 lg:pt-9">
         <div
-          className={`${statue} aspect-[355/298] max-w-[22.2rem] justify-self-center lg:col-start-1 lg:justify-self-end`}
+          className={`${statue} row-start-1 aspect-[355/298] max-w-56 sm:max-w-64 lg:col-start-1 lg:max-w-[22.2rem] lg:justify-self-end`}
         >
           <Image
             src="/image/avater_image_3.png"
@@ -32,7 +33,7 @@ export default function CustomCourse() {
           />
         </div>
 
-        <div className="col-span-2 row-start-1 mx-auto w-full max-w-[46.7rem] border border-black/25 bg-[#fdecea] px-6 pt-10 pb-9 text-center shadow-[0.375rem_0.375rem_0_#f8a206] lg:col-span-1 lg:col-start-2 lg:border-b-0 lg:pt-12 lg:shadow-[0.375rem_0_0_#f8a206]">
+        <div className="row-start-2 mx-auto mb-8 w-full max-w-[46.7rem] border border-black/25 bg-[#fdecea] px-6 pt-10 pb-9 text-center shadow-[0.375rem_0.375rem_0_#f8a206] lg:col-start-2 lg:row-start-1 lg:mb-0 lg:border-b-0 lg:pt-12 lg:shadow-[0.375rem_0_0_#f8a206]">
           <p className="text-sm tracking-[0.2em] uppercase">
             Design your own course
           </p>
@@ -60,7 +61,7 @@ export default function CustomCourse() {
 
         {/* This picture has empty space around the statue, so it is enlarged and shifted */}
         <div
-          className={`${statue} aspect-[343/290] max-w-[21.4rem] justify-self-center lg:col-start-3 lg:justify-self-start`}
+          className={`${statue} row-start-3 aspect-[343/290] max-w-56 sm:max-w-64 lg:col-start-3 lg:max-w-[21.4rem] lg:justify-self-start`}
         >
           <Image
             src="/image/avater_image_4.png"

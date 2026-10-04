@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import ScrollProgress from "@/components/ScrollProgress";
 import { navLinks } from "@/data/navLinks";
 import {
   ChevronDownIcon,
@@ -19,6 +20,13 @@ const demoButton =
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const searchInput = useRef(null);
+
+  // Put the cursor in the search box as soon as it opens.
+  useEffect(() => {
+    if (searchOpen) searchInput.current.focus();
+  }, [searchOpen]);
 
   return (
     // sticky: the header stays at the top of the screen while the page scrolls
@@ -51,8 +59,21 @@ export default function Header() {
           ))}
         </nav>
 
-        <button type="button" aria-label="Search" className={roundButton}>
-          <SearchIcon className="size-5" />
+        <button
+          type="button"
+          aria-label={searchOpen ? "Close search" : "Search"}
+          aria-expanded={searchOpen}
+          onClick={() => {
+            setSearchOpen(!searchOpen);
+            setMenuOpen(false);
+          }}
+          className={`${roundButton} cursor-pointer transition-transform duration-300 hover:scale-105`}
+        >
+          {searchOpen ? (
+            <CloseIcon className="size-5" />
+          ) : (
+            <SearchIcon className="size-5" />
+          )}
         </button>
 
         {/* On phones this button lives inside the menu instead */}
@@ -67,7 +88,10 @@ export default function Header() {
           type="button"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
-          onClick={() => setMenuOpen(!menuOpen)}
+          onClick={() => {
+            setMenuOpen(!menuOpen);
+            setSearchOpen(false);
+          }}
           className={`${roundButton} xl:hidden`}
         >
           {menuOpen ? (
@@ -76,6 +100,49 @@ export default function Header() {
             <MenuIcon className="size-5" />
           )}
         </button>
+      </div>
+
+      {/*
+        Search box. It slides open and shut under the nav bar: the row grows from
+        0 to its full height (grid-rows 0fr → 1fr) while the box fades in.
+        `inert` keeps the hidden box out of reach of the keyboard.
+      */}
+      <div
+        inert={!searchOpen}
+        className={`grid transition-[grid-template-rows,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
+          searchOpen
+            ? "grid-rows-[1fr] opacity-100"
+            : "grid-rows-[0fr] opacity-0"
+        }`}
+      >
+        <div className="overflow-hidden">
+          <form
+            action="/search"
+            role="search"
+            onKeyDown={(event) =>
+              event.key === "Escape" && setSearchOpen(false)
+            }
+            className="site-container pb-4 xl:pb-5"
+          >
+            <div className="mx-auto flex max-w-3xl items-center gap-2 rounded-full bg-white py-1.5 pr-1.5 pl-5 shadow-md">
+              <input
+                ref={searchInput}
+                type="search"
+                name="q"
+                placeholder="Search courses, mock tests, events..."
+                aria-label="Search"
+                className="min-w-0 flex-1 bg-transparent py-1.5 text-ink outline-none placeholder:text-ink/50"
+              />
+              <button
+                type="submit"
+                aria-label="Search"
+                className="grid size-9 shrink-0 cursor-pointer place-items-center rounded-full bg-brand-orange text-white transition-colors hover:bg-brand-royal"
+              >
+                <SearchIcon className="size-4" />
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
 
       {/* Mobile navigation */}
@@ -108,6 +175,8 @@ export default function Header() {
           </ul>
         </nav>
       )}
+
+      <ScrollProgress />
     </header>
   );
 }

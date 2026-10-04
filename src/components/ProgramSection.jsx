@@ -2,6 +2,8 @@ import Image from "next/image";
 import CourseCard from "@/components/CourseCard";
 import ExamRegisterCard from "@/components/ExamRegisterCard";
 import MockTestCard from "@/components/MockTestCard";
+import Reveal from "@/components/Reveal";
+import Slider from "@/components/Slider";
 
 // One exam's courses, mock tests and exam registration (used for IELTS and for PTE).
 // `program` comes from data/programs.js.
@@ -45,22 +47,33 @@ export default function ProgramSection({ program }) {
           </p>
         </div>
 
-        {/* Courses: 1 per row on phones, 2 on tablets, 3 on desktop (last row centred) */}
-        <ul className="mx-auto mt-8 flex max-w-[75.5rem] flex-wrap justify-center gap-6 lg:mt-10 lg:gap-8">
-          {program.courses.map((course) => (
-            <li
-              key={course.id}
-              className="w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc((100%-4rem)/3)]"
-            >
-              <CourseCard course={course} />
-            </li>
-          ))}
-        </ul>
+        {/* Courses: auto-playing slider on phones, 2 per row on tablets, 3 on desktop (last row centred) */}
+        <div className="mx-auto mt-8 max-w-[75.5rem] lg:mt-10">
+          <Slider
+            className="sm:flex-wrap sm:justify-center sm:gap-6 sm:overflow-visible sm:py-0 lg:gap-8"
+            slideClassName="w-[85%] sm:w-[calc(50%-0.75rem)] lg:w-[calc((100%-4rem)/3)]"
+          >
+            {/* Each card appears as it comes into view, one after another along the row */}
+            {program.courses.map((course, index) => (
+              <Reveal
+                key={course.id}
+                delay={(index % 3) * 120}
+                className="grid h-full"
+              >
+                <CourseCard course={course} />
+              </Reveal>
+            ))}
+          </Slider>
+        </div>
 
         {/* Mock tests and exam registration: stacked, side by side on desktop */}
         <div className="mx-auto mt-8 grid max-w-[80rem] gap-6 lg:mt-12 lg:grid-cols-[22rem_1fr]">
-          <MockTestCard mockTests={program.mockTests} />
-          <ExamRegisterCard exam={program.exam} />
+          <Reveal className="grid">
+            <MockTestCard mockTests={program.mockTests} />
+          </Reveal>
+          <Reveal delay={120} className="grid">
+            <ExamRegisterCard exam={program.exam} />
+          </Reveal>
         </div>
       </div>
     </section>

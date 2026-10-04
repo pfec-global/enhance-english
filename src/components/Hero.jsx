@@ -6,8 +6,10 @@ const button =
   "flex items-center gap-3 border px-4 py-2.5 font-semibold transition-colors";
 
 // Tags are placed with top + right so they grow away from the student's face.
+// They drift slowly around their spot (animate-float); each one gets its own speed
+// and starting point below so the three never move together.
 const tag =
-  "absolute rounded-sm bg-white px-2 py-1.5 text-[10px] leading-tight whitespace-nowrap text-ink shadow-md sm:px-3 sm:py-2 sm:text-xs lg:text-base";
+  "absolute animate-float motion-reduce:animate-none rounded-sm bg-white px-2 py-1.5 text-[10px] leading-tight whitespace-nowrap text-ink shadow-md sm:px-3 sm:py-2 sm:text-xs lg:text-base";
 
 export default function Hero() {
   return (
@@ -28,12 +30,16 @@ export default function Hero() {
         />
       </svg>
 
-      {/* Stacked on phones and tablets, side by side on desktop */}
-      <div className="site-container py-12 lg:flex lg:items-center lg:justify-between lg:py-6">
-        {/* Text */}
-        <div className="relative lg:py-16">
+      {/*
+        phones, tablets: heading, yellow note, photo, then the two buttons below the photo
+        desktop:         heading, yellow note and buttons on the left, photo on the right
+      */}
+      <div className="site-container flex flex-col py-12 lg:flex-row lg:items-center lg:justify-between lg:py-6">
+        {/* Text — heading, yellow note and buttons slide in from the left one after another on page load */}
+        {/* `contents`: on phones and tablets this box steps aside, so the photo can sit between the note and the buttons */}
+        <div className="contents lg:relative lg:block lg:py-16">
           {/* Font size: phones → tablets → desktop */}
-          <h1 className="text-[clamp(1.75rem,11vw,2.75rem)] leading-[1.13] font-light text-[#FDFDFD] sm:text-6xl lg:text-[4.75rem]">
+          <h1 className="animate-slide-in motion-reduce:animate-none text-[clamp(1.75rem,11vw,2.75rem)] leading-[1.13] font-light text-[#FDFDFD] sm:text-6xl lg:text-[4.75rem]">
             Score{" "}
             <span className="inline-block -rotate-3 bg-brand-orange px-[0.2em] font-display tracking-wide shadow-[0.25rem_0.25rem_0_var(--color-brand-yellow)]">
               7+ Band
@@ -42,14 +48,14 @@ export default function Hero() {
             on <strong className="font-black">IELTS</strong>
           </h1>
 
-          <p className="mt-6 w-fit bg-brand-yellow px-2 py-1.5 leading-snug text-ink sm:text-lg lg:text-xl">
+          <p className="animate-slide-in [animation-delay:150ms] motion-reduce:animate-none mt-6 w-fit bg-brand-yellow px-2 py-1.5 leading-snug text-ink sm:text-lg lg:text-xl">
             Join <strong>Enhance English’s Coaching Classes</strong> or{" "}
             <strong>Language Clubs</strong>
             <br className="hidden sm:block" /> And Build Confidence in English
             for <strong>Study, Work, and Life.</strong>
           </p>
 
-          <div className="mt-6 flex flex-wrap gap-4 sm:gap-6">
+          <div className="animate-slide-in [animation-delay:300ms] motion-reduce:animate-none order-last mt-10 flex flex-wrap gap-4 sm:justify-center sm:gap-6 lg:order-none lg:mt-6 lg:justify-start">
             <Link
               href="/book-demo"
               className={`${button} border-brand-orange bg-brand-orange hover:border-white hover:bg-white hover:text-brand-orange`}
@@ -68,7 +74,7 @@ export default function Hero() {
         </div>
 
         {/* Photo — the circle, doodles and yellow edge are part of the image file */}
-        <div className="relative mt-12 ml-auto w-[78%] max-w-sm sm:mx-auto lg:mt-0 lg:mr-[3.5%] lg:ml-0 lg:w-[30%] lg:max-w-none lg:shrink-0">
+        <div className="animate-pop-in [animation-delay:200ms] motion-reduce:animate-none relative mt-12 ml-auto w-[78%] max-w-sm sm:mx-auto lg:mt-0 lg:mr-[3.5%] lg:ml-0 lg:w-[30%] lg:max-w-none lg:shrink-0">
           <Image
             src="/image/hero-image.png"
             alt="Student taking notes in an Enhance English class"
@@ -83,11 +89,15 @@ export default function Hero() {
             <strong className="block">Online &amp; Offline</strong>
             Batches
           </p>
-          <p className={`${tag} top-[53%] -right-[1%]`}>
+          <p
+            className={`${tag} top-[53%] -right-[1%] [animation-delay:-2s] [animation-direction:reverse] [animation-duration:9s]`}
+          >
             <strong className="block">5000+</strong>
             Happy Students
           </p>
-          <p className={`${tag} top-[78%] right-[85%]`}>
+          <p
+            className={`${tag} top-[78%] right-[85%] [animation-delay:-4s] [animation-duration:8s]`}
+          >
             <strong className="block">5000+</strong>
             Happy Students
           </p>

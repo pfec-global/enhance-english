@@ -198,3 +198,75 @@ export function MessageCircleIcon(props) {
     </Icon>
   );
 }
+
+export function ChevronUpIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="m5 15 7-7 7 7" />
+    </Icon>
+  );
+}
+
+export function PhoneIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z" />
+    </Icon>
+  );
+}
+
+export function MailIcon(props) {
+  return (
+    <Icon {...props}>
+      <rect x="2" y="4" width="20" height="16" rx="2" />
+      <path d="m2 7 10 7 10-7" />
+    </Icon>
+  );
+}
+
+// Social media logos, used in white on a coloured square (components/Footer.jsx).
+
+export function LinkedinIcon(props) {
+  return (
+    <Icon fill="currentColor" stroke="none" {...props}>
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6Z" />
+      <rect x="2" y="9" width="4" height="12" />
+      <circle cx="4" cy="4" r="2" />
+    </Icon>
+  );
+}
+
+// The play triangle is cut out, so the square's colour shows through it.
+export function YoutubeIcon(props) {
+  return (
+    <Icon fill="currentColor" stroke="none" fillRule="evenodd" {...props}>
+      <path d="M2.5 17a24 24 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.6 49.6 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24 24 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.6 49.6 0 0 1-16.2 0A2 2 0 0 1 2.5 17Zm7.5-2 5-3-5-3v6Z" />
+    </Icon>
+  );
+}
+
+export function FacebookIcon(props) {
+  return (
+    <Icon fill="currentColor" stroke="none" {...props}>
+      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3V2Z" />
+    </Icon>
+  );
+}
+
+export function InstagramIcon(props) {
+  return (
+    <Icon {...props}>
+      <rect x="2" y="2" width="20" height="20" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <path d="M17.5 6.5h.01" />
+    </Icon>
+  );
+}
+
+export function TwitterIcon(props) {
+  return (
+    <Icon fill="currentColor" stroke="none" {...props}>
+      <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2Z" />
+    </Icon>
+  );
+}

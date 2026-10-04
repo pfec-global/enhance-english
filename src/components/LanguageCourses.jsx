@@ -1,6 +1,8 @@
 import Image from "next/image";
 import LanguageCourseCard from "@/components/LanguageCourseCard";
 import { PresentationIcon } from "@/components/icons";
+import Reveal from "@/components/Reveal";
+import Slider from "@/components/Slider";
 import { languageCourses } from "@/data/languageCourses";
 
 export default function LanguageCourses() {
@@ -38,13 +40,23 @@ export default function LanguageCourses() {
           className="absolute top-[14%] left-0 h-auto w-[max(101%,64rem)] max-w-none"
         />
 
-        <ul className="site-container relative">
-          {languageCourses.map((course, index) => (
-            <li key={course.id} className="mx-auto mt-8 max-w-[65.75rem] first:mt-0">
-              <LanguageCourseCard course={course} imageRight={index % 2 === 1} />
-            </li>
-          ))}
-        </ul>
+        {/* Auto-playing slider on phones, one card below the other from tablets up */}
+        <div className="site-container relative">
+          <Slider
+            className="sm:block sm:overflow-visible sm:py-0"
+            slideClassName="w-[85%] sm:mx-auto sm:mt-8 sm:w-auto sm:max-w-[65.75rem] sm:first:mt-0"
+          >
+            {/* Each card appears as it scrolls into view */}
+            {languageCourses.map((course, index) => (
+              <Reveal key={course.id} className="grid h-full">
+                <LanguageCourseCard
+                  course={course}
+                  imageRight={index % 2 === 1}
+                />
+              </Reveal>
+            ))}
+          </Slider>
+        </div>
       </div>
     </section>
   );

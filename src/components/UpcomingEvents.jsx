@@ -1,5 +1,6 @@
 import EventCard from "@/components/EventCard";
 import { CalendarHeartIcon } from "@/components/icons";
+import Reveal from "@/components/Reveal";
 import Slider from "@/components/Slider";
 import { events } from "@/data/events";
 
@@ -30,8 +31,15 @@ export default function UpcomingEvents() {
             className="sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:py-0 xl:grid-cols-4"
             slideClassName="w-[85%] sm:w-auto"
           >
-            {events.map((event) => (
-              <EventCard key={event.id} event={event} />
+            {/* Each card appears as it comes into view, one after another along the row */}
+            {events.map((event, index) => (
+              <Reveal
+                key={event.id}
+                delay={(index % 4) * 120}
+                className="grid h-full"
+              >
+                <EventCard event={event} />
+              </Reveal>
             ))}
           </Slider>
         </div>
