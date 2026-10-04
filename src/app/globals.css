@@ -10,6 +10,7 @@
   --color-ink: #1a1a1a;
   --color-surface: #fbfbfb; /* light section background */
   --color-card: #fdfdfd;
+  --color-cream: #fff6ec; /* course page hero background */
 
   --font-sans: var(--font-montserrat);
   --font-display: var(--font-titan-one);

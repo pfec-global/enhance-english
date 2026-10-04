@@ -7,15 +7,19 @@ import Slider from "@/components/Slider";
 import TestimonialCard from "@/components/TestimonialCard";
 import { exams, testimonials } from "@/data/testimonials";
 
-export default function Testimonials() {
+// Home page: every exam, with "Filter By" logo buttons.
+// Course pages pass `exam` ("ielts" or "pte"): only that exam's results are
+// shown, with its logo and no filter buttons.
+export default function Testimonials({ exam }) {
   // null = show every exam. Clicking the active logo again clears the filter.
-  const [filter, setFilter] = useState(null);
+  const [chosen, setChosen] = useState(null);
+  const filter = exam ?? chosen;
 
   const visible = filter
     ? testimonials.filter((testimonial) => testimonial.exam === filter)
     : testimonials;
 
-  const examName = (id) => exams.find((exam) => exam.id === id)?.name;
+  const examName = (id) => exams.find((item) => item.id === id)?.name;
 
   return (
     <section aria-labelledby="testimonials" className="bg-surface">
@@ -32,28 +36,38 @@ export default function Testimonials() {
             <br className="hidden lg:block" /> You Could Be the Next!
           </h2>
 
-          <div className="flex shrink-0 items-center gap-4">
-            <span className="whitespace-nowrap">Filter By</span>
-            {exams.map((exam) => (
-              <button
-                key={exam.id}
-                type="button"
-                aria-pressed={filter === exam.id}
-                onClick={() => setFilter(filter === exam.id ? null : exam.id)}
-                className={`transition duration-300 hover:-translate-y-0.5 ${
-                  filter && filter !== exam.id ? "opacity-40 grayscale" : ""
-                }`}
-              >
-                <Image
-                  src={exam.logo}
-                  alt={exam.name}
-                  width={253}
-                  height={100}
-                  className="h-11 w-auto lg:h-[3.2rem]"
-                />
-              </button>
-            ))}
-          </div>
+          {exam ? (
+            <Image
+              src={exams.find((item) => item.id === exam).logo}
+              alt={examName(exam)}
+              width={253}
+              height={100}
+              className="h-11 w-auto shrink-0 self-start lg:h-[3.2rem] lg:self-center"
+            />
+          ) : (
+            <div className="flex shrink-0 items-center gap-4">
+              <span className="whitespace-nowrap">Filter By</span>
+              {exams.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  aria-pressed={filter === item.id}
+                  onClick={() => setChosen(filter === item.id ? null : item.id)}
+                  className={`transition duration-300 hover:-translate-y-0.5 ${
+                    filter && filter !== item.id ? "opacity-40 grayscale" : ""
+                  }`}
+                >
+                  <Image
+                    src={item.logo}
+                    alt={item.name}
+                    width={253}
+                    height={100}
+                    className="h-11 w-auto lg:h-[3.2rem]"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="mt-6 sm:mt-8">

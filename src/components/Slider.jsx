@@ -42,6 +42,7 @@ function goTo(track, index) {
   - `className` is added to the row (gaps, or turning it into a grid).
   - `loop` keeps it going round forever, even when every slide fits on screen.
   - `onDark` switches the dots to yellow and white, for dark backgrounds.
+  - `showDots={false}` hides the dots.
   Without `loop`, it stops sliding and hides the dots when all slides fit.
 */
 export default function Slider({
@@ -51,6 +52,7 @@ export default function Slider({
   interval = 3500,
   loop = false,
   onDark = false,
+  showDots = true,
 }) {
   const trackRef = useRef(null);
   const pausedRef = useRef(false);
@@ -255,7 +257,7 @@ export default function Slider({
           ))}
       </ul>
 
-      {dots > 1 && (
+      {showDots && dots > 1 && (
         <div className="mt-2 flex justify-center">
           {Array.from({ length: dots }, (_, index) => (
             <button

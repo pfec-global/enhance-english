@@ -270,3 +270,41 @@ export function TwitterIcon(props) {
     </Icon>
   );
 }
+
+export function CartIcon(props) {
+  return (
+    <Icon {...props}>
+      <circle cx="9" cy="20" r="1.25" />
+      <circle cx="18" cy="20" r="1.25" />
+      <path d="M2 3h2.5l2.7 12.4a2 2 0 0 0 2 1.6h8.9a2 2 0 0 0 1.9-1.6L21.5 8H13" />
+      <path d="M9 5v6M6 8h6" />
+    </Icon>
+  );
+}
+
+export function HourglassIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M5 22h14M5 2h14" />
+      <path d="M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4a2 2 0 0 0-.6 1.4V22" />
+      <path d="M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4a2 2 0 0 0 .6-1.4V2" />
+    </Icon>
+  );
+}
+
+export function ListCheckIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M3 6h13M3 12h13M3 18h8m4-1 2 2 4-4" />
+    </Icon>
+  );
+}
+
+export function TicketIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2Z" />
+      <path d="M13 5v2m0 4v2m0 4v2" />
+    </Icon>
+  );
+}
