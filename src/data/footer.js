@@ -45,7 +45,7 @@ export const linkGroups = [
     links: [
       { label: "Coaching Classes", href: "/ielts" },
       { label: "Mock Tests", href: "/ielts/mock-tests" },
-      { label: "Exam Registration", href: "/exam-registration" },
+      { label: "Exam Registration", href: "/exam-registration/ielts" },
       { label: "What is IELTS?", href: "/ielts/what-is-ielts" },
     ],
   },
@@ -62,7 +62,7 @@ export const linkGroups = [
     links: [
       {
         label: "Speaking & Presentation Classes",
-        href: "/learn-english/speaking-and-presentation",
+        href: "/learn-english/spoken-and-presentation",
       },
       {
         label: "Writing & Grammar Classes",
@@ -81,9 +81,9 @@ export const linkGroups = [
   {
     title: "Resources",
     links: [
-      { label: "Blogs", href: "/resources/blogs" },
+      { label: "Blogs", href: "/blogs" },
       { label: "Downloadable Content", href: "/resources/downloads" },
-      { label: "Upcoming Events", href: "/resources/events" },
+      { label: "Upcoming Events", href: "/events" },
     ],
   },
 ];

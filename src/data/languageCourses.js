@@ -11,6 +11,15 @@ const features = [
   { icon: "board", label: "Presentation Skill" },
 ];
 
+// Colours of the Learn English pages (components/CourseHero.jsx,
+// components/ProgramHero.jsx, components/CourseExplore.jsx)
+export const englishPageColors = {
+  hero: "#f0f4f7", // hero background
+  heroBlock: "#2d0097", // block behind the hero picture
+  title: "var(--color-ink)", // hero title
+  explore: "var(--color-brand-blue)", // "Explore Other" section background
+};
+
 export const languageCourses = [
   {
     id: 1,

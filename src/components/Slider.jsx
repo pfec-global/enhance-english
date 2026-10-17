@@ -211,6 +211,7 @@ export default function Slider({
   return (
     <>
       {/* On phones the row runs to the screen edges, so the next slide peeks in */}
+      {/* overflow-y-hidden: the row only moves sideways, even while a card inside is still sliding up into place */}
       <ul
         ref={trackRef}
         onScroll={handleScroll}
@@ -236,7 +237,7 @@ export default function Slider({
           event.preventDefault();
           event.stopPropagation();
         }}
-        className={`no-scrollbar -mx-6 flex snap-x snap-mandatory scroll-px-6 gap-4 overflow-x-auto px-6 pt-2 pb-3 sm:mx-0 sm:scroll-px-0 sm:px-0 ${
+        className={`no-scrollbar -mx-6 flex snap-x snap-mandatory scroll-px-6 gap-4 overflow-x-auto overflow-y-hidden px-6 pt-2 pb-3 sm:mx-0 sm:scroll-px-0 sm:px-0 ${
           canDrag ? "cursor-grab select-none active:cursor-grabbing" : ""
         } ${className}`}
       >

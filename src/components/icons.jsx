@@ -308,3 +308,21 @@ export function TicketIcon(props) {
     </Icon>
   );
 }
+
+export function InfoIcon(props) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 11v5m0-8v.01" />
+    </Icon>
+  );
+}
+
+export function HeartHandshakeIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M19.4 13.5 12 21l-7.4-7.5A4.7 4.7 0 0 1 12 6.6a4.7 4.7 0 0 1 7.4 6.9Z" />
+      <path d="m12 6.6-3 3a1.5 1.5 0 0 0 2.1 2.1L13 10l3.5 3.5M14.5 15.5l-1.5-1.5" />
+    </Icon>
+  );
+}

@@ -1,4 +1,5 @@
 import { Coiny, Montserrat, Titan_One } from "next/font/google";
+import DemoClassModal from "@/components/DemoClassModal";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import "./globals.css";
@@ -42,6 +43,8 @@ export default function RootLayout({ children }) {
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        {/* Opens from every "Book Free Demo Class" button (any link to /book-demo) */}
+        <DemoClassModal />
       </body>
     </html>
   );

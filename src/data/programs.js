@@ -21,6 +21,13 @@ export const ieltsProgram = {
   background: "/image/ielts_bg.png",
   backgroundColor: "#ffe9e9",
   accentColor: "var(--color-brand-orange)", // the word "IELTS" and the calendar circles
+  // Course pages (components/CourseHero.jsx, components/CourseExplore.jsx)
+  coursePageColors: {
+    hero: "var(--color-cream)", // hero background
+    heroBlock: "var(--color-brand-orange)", // block behind the hero photo
+    title: "var(--color-brand-orange)", // hero title
+    explore: "var(--color-brand-orange)", // "Explore Other" section background
+  },
 
   courses: [
     {
@@ -72,7 +79,7 @@ export const ieltsProgram = {
     description:
       "As a Certified IELTS Registration Center, we help you enrol for your IELTS exam with ease and clarity.",
     image: "/image/exam_student_1.png",
-    href: "/exam-registration",
+    href: "/exam-registration/ielts",
     actualPrice: "24,000",
     cashback: "2,000",
     effectivePrice: "22,000",
@@ -90,6 +97,12 @@ export const pteProgram = {
   background: "/image/pearson_bg.png",
   backgroundColor: "#eafaff",
   accentColor: "var(--color-brand-blue)",
+  coursePageColors: {
+    hero: "#e4f6fa",
+    heroBlock: "var(--color-brand-blue)",
+    title: "var(--color-brand-orange)",
+    explore: "var(--color-brand-blue)",
+  },
 
   courses: [
     {
@@ -141,7 +154,7 @@ export const pteProgram = {
     description:
       "We help you enrol for your PTE exam with ease and clarity.",
     image: "/image/exam_student_2.png",
-    href: "/exam-registration",
+    href: "/exam-registration/pte",
     actualPrice: "24,000",
     cashback: "2,000",
     effectivePrice: "22,000",

@@ -9,15 +9,18 @@ import { exams, testimonials } from "@/data/testimonials";
 
 // Home page: every exam, with "Filter By" logo buttons.
 // Course pages pass `exam` ("ielts" or "pte"): only that exam's results are
-// shown, with its logo and no filter buttons.
+// shown, with its logo and no filter buttons. Until an exam has results of its
+// own (PTE for now), its pages show every result instead.
 export default function Testimonials({ exam }) {
   // null = show every exam. Clicking the active logo again clears the filter.
   const [chosen, setChosen] = useState(null);
   const filter = exam ?? chosen;
 
-  const visible = filter
+  const filtered = filter
     ? testimonials.filter((testimonial) => testimonial.exam === filter)
     : testimonials;
+  // TODO: remove the fallback once there are PTE results
+  const visible = exam && filtered.length === 0 ? testimonials : filtered;
 
   const examName = (id) => exams.find((item) => item.id === id)?.name;
 

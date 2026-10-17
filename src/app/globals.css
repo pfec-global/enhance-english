@@ -12,6 +12,12 @@
   --color-card: #fdfdfd;
   --color-cream: #fff6ec; /* course page hero background */
 
+  /* Blog pages (app/blogs, app/author, app/category) — same names as on the PFEC
+     India site they were copied from, so the class names there stay the same */
+  --color-accent: var(--color-brand-orange); /* links, tags, buttons */
+  --color-navy: #000423; /* page titles */
+  --color-indigo: #1d297c; /* section titles */
+
   --font-sans: var(--font-montserrat);
   --font-display: var(--font-titan-one);
   --font-coiny: var(--coiny);
@@ -44,6 +50,17 @@
     }
   }
 
+  /* Fade in while rising, when the page loads (blog page heroes). Add a delay
+     with e.g. [animation-delay:100ms] so items appear one after another. */
+  --animate-fade-up: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      translate: 0 2rem;
+    }
+  }
+
   /* Hero entrance when the page loads (components/Hero.jsx) */
   --animate-slide-in: slide-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both; /* text and buttons come in from the left */
   --animate-pop-in: pop-in 1.1s cubic-bezier(0.22, 1, 0.36, 1) both; /* photo grows into place */
@@ -72,6 +89,11 @@
   /* Links that jump to a part of the page stop below the sticky header. */
   html {
     scroll-padding-top: 6rem;
+  }
+
+  /* The page behind an open pop-up (components/DemoClassModal.jsx) does not scroll. */
+  html:has(dialog[open]) {
+    overflow: hidden;
   }
 
   /* Jumps inside the page (links to a section, "back to top") glide instead of snapping. */

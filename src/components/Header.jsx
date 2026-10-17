@@ -1,16 +1,120 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ScrollProgress from "@/components/ScrollProgress";
 import { navLinks } from "@/data/navLinks";
 import {
+  ArrowRightIcon,
+  BookOpenIcon,
+  CalendarIcon,
+  CertificateIcon,
   ChevronDownIcon,
   CloseIcon,
+  GraduationCapIcon,
+  HourglassIcon,
+  LetterIcon,
   MenuIcon,
-  SearchIcon,
+  MonitorIcon,
+  SpeakerIcon,
+  TicketIcon,
 } from "@/components/icons";
+
+const menuIcons = {
+  cap: GraduationCapIcon,
+  book: BookOpenIcon,
+  monitor: MonitorIcon,
+  hourglass: HourglassIcon,
+  calendar: CalendarIcon,
+  speaker: SpeakerIcon,
+  letter: LetterIcon,
+  certificate: CertificateIcon,
+  ticket: TicketIcon,
+};
+
+// After a menu link is clicked, take the focus off it so the dropdown closes.
+const leaveMenu = () => document.activeElement?.blur();
+
+/*
+  Desktop dropdown: the courses on the left, a coloured box with mock tests,
+  exam registration etc. on the right. `menu` comes from data/navLinks.js.
+  It opens while the pointer is over the nav item or the keyboard focus is
+  inside it (CSS only, see the `group` in Header), and closes on Escape.
+*/
+function NavMenu({ menu }) {
+  const { feature } = menu;
+
+  return (
+    // pt-3 is an invisible bridge, so the menu stays open on the way down to it
+    <div
+      className={`invisible absolute top-full z-10 ${menu.alignRight ? "-right-6" : "-left-6"} translate-y-2 pt-3 opacity-0 transition duration-300 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 motion-reduce:transition-none`}
+    >
+      <div
+        className="grid w-[42rem] grid-cols-[1fr_16rem] overflow-hidden rounded-2xl bg-white text-ink shadow-xl ring-1 ring-black/5"
+        style={{ "--menu": feature.color }}
+      >
+        <div className="p-4">
+          <p className="px-3 pb-2 text-xs font-bold tracking-wider text-black/50 uppercase">
+            {menu.title}
+          </p>
+          <ul>
+            {menu.items.map((item) => {
+              const ItemIcon = menuIcons[item.icon];
+              return (
+                <li key={item.href}>
+                  {/* Hover: the row turns grey and the icon fills with the menu colour */}
+                  <Link
+                    href={item.href}
+                    onClick={leaveMenu}
+                    className="group/item flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-surface focus-visible:bg-surface"
+                  >
+                    <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-(--menu)/10 text-(--menu) transition-colors group-hover/item:bg-(--menu) group-hover/item:text-white">
+                      <ItemIcon className="size-5" strokeWidth={1.5} />
+                    </span>
+                    <span>
+                      <span className="block leading-snug font-semibold">
+                        {item.label}
+                      </span>
+                      <span className="block text-sm text-black/60">
+                        {item.text}
+                      </span>
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+
+        <div className="flex flex-col bg-(--menu) p-6 text-white">
+          <p className="w-fit rounded-sm bg-brand-yellow px-2 py-1 text-xs font-bold text-ink">
+            {feature.badge}
+          </p>
+          <p className="mt-3 text-lg leading-snug font-bold">
+            {feature.title}
+          </p>
+          <p className="mt-2 text-sm text-white/85">{feature.text}</p>
+          <ul className="mt-auto pt-4">
+            {feature.links.map((link) => (
+              <li key={link.href + link.label}>
+                {/* Hover: the arrow moves right */}
+                <Link
+                  href={link.href}
+                  onClick={leaveMenu}
+                  className="group/link flex items-center justify-between gap-2 border-b border-white/25 py-2.5 text-sm font-semibold"
+                >
+                  {link.label}
+                  <ArrowRightIcon className="size-4 shrink-0 transition-transform group-hover/link:translate-x-1" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const roundButton =
   "grid size-11 shrink-0 place-items-center rounded-full bg-white text-brand-orange shadow-md";
@@ -20,13 +124,8 @@ const demoButton =
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const searchInput = useRef(null);
-
-  // Put the cursor in the search box as soon as it opens.
-  useEffect(() => {
-    if (searchOpen) searchInput.current.focus();
-  }, [searchOpen]);
+  // Phones: the label of the nav item whose dropdown is open, if any
+  const [mobileOpen, setMobileOpen] = useState(null);
 
   return (
     // sticky: the header stays at the top of the screen while the page scrolls
@@ -46,35 +145,31 @@ export default function Header() {
         {/* Desktop navigation */}
         <nav className="hidden flex-1 items-center justify-between rounded-full bg-white px-8 shadow-md xl:mr-10 xl:ml-6 xl:flex">
           {navLinks.map((link) => (
-            <Link
+            <div
               key={link.href}
-              href={link.href}
-              className="flex items-center gap-1.5 py-3 font-semibold transition-colors hover:text-brand-orange"
+              className="group relative"
+              onKeyDown={(event) => event.key === "Escape" && leaveMenu()}
             >
-              {link.label}
-              {link.hasDropdown && (
-                <ChevronDownIcon className="size-5 text-brand-orange" />
-              )}
-            </Link>
+              <Link
+                href={link.href}
+                aria-haspopup={link.menu ? "true" : undefined}
+                className="flex items-center gap-1.5 py-3 font-semibold transition-colors group-hover:text-brand-orange"
+              >
+                {link.label}
+                {link.hasDropdown && (
+                  <ChevronDownIcon
+                    className={`size-5 text-brand-orange transition-transform duration-300 ${
+                      link.menu
+                        ? "group-focus-within:rotate-180 group-hover:rotate-180"
+                        : ""
+                    }`}
+                  />
+                )}
+              </Link>
+              {link.menu && <NavMenu menu={link.menu} />}
+            </div>
           ))}
         </nav>
-
-        <button
-          type="button"
-          aria-label={searchOpen ? "Close search" : "Search"}
-          aria-expanded={searchOpen}
-          onClick={() => {
-            setSearchOpen(!searchOpen);
-            setMenuOpen(false);
-          }}
-          className={`${roundButton} cursor-pointer transition-transform duration-300 hover:scale-105`}
-        >
-          {searchOpen ? (
-            <CloseIcon className="size-5" />
-          ) : (
-            <SearchIcon className="size-5" />
-          )}
-        </button>
 
         {/* On phones this button lives inside the menu instead */}
         <Link
@@ -88,10 +183,7 @@ export default function Header() {
           type="button"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
-          onClick={() => {
-            setMenuOpen(!menuOpen);
-            setSearchOpen(false);
-          }}
+          onClick={() => setMenuOpen(!menuOpen)}
           className={`${roundButton} xl:hidden`}
         >
           {menuOpen ? (
@@ -102,67 +194,72 @@ export default function Header() {
         </button>
       </div>
 
-      {/*
-        Search box. It slides open and shut under the nav bar: the row grows from
-        0 to its full height (grid-rows 0fr → 1fr) while the box fades in.
-        `inert` keeps the hidden box out of reach of the keyboard.
-      */}
-      <div
-        inert={!searchOpen}
-        className={`grid transition-[grid-template-rows,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
-          searchOpen
-            ? "grid-rows-[1fr] opacity-100"
-            : "grid-rows-[0fr] opacity-0"
-        }`}
-      >
-        <div className="overflow-hidden">
-          <form
-            action="/search"
-            role="search"
-            onKeyDown={(event) =>
-              event.key === "Escape" && setSearchOpen(false)
-            }
-            className="site-container pb-4 xl:pb-5"
-          >
-            <div className="mx-auto flex max-w-3xl items-center gap-2 rounded-full bg-white py-1.5 pr-1.5 pl-5 shadow-md">
-              <input
-                ref={searchInput}
-                type="search"
-                name="q"
-                placeholder="Search courses, mock tests, events..."
-                aria-label="Search"
-                className="min-w-0 flex-1 bg-transparent py-1.5 text-ink outline-none placeholder:text-ink/50"
-              />
-              <button
-                type="submit"
-                aria-label="Search"
-                className="grid size-9 shrink-0 cursor-pointer place-items-center rounded-full bg-brand-orange text-white transition-colors hover:bg-brand-royal"
-              >
-                <SearchIcon className="size-4" />
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-
       {/* Mobile navigation */}
       {menuOpen && (
         <nav className="site-container pb-4 xl:hidden">
           <ul className="rounded-2xl bg-white px-5 py-2 shadow-lg">
-            {navLinks.map((link) => (
-              <li key={link.href} className="border-b border-black/10">
-                <Link
-                  href={link.href}
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center justify-between py-3 font-semibold"
-                >
-                  {link.label}
-                  {link.hasDropdown && (
-                    <ChevronDownIcon className="size-5 text-brand-orange" />
+            {navLinks.map((link) => {
+              const open = mobileOpen === link.label;
+
+              return (
+                <li key={link.href} className="border-b border-black/10">
+                  <div className="flex items-center justify-between">
+                    <Link
+                      href={link.href}
+                      onClick={() => setMenuOpen(false)}
+                      className="flex-1 py-3 font-semibold"
+                    >
+                      {link.label}
+                    </Link>
+                    {link.menu ? (
+                      <button
+                        type="button"
+                        aria-label={`${link.label} courses`}
+                        aria-expanded={open}
+                        onClick={() => setMobileOpen(open ? null : link.label)}
+                        className="-mr-2 grid size-10 place-items-center"
+                      >
+                        <ChevronDownIcon
+                          className={`size-5 text-brand-orange transition-transform duration-300 ${
+                            open ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
+                    ) : (
+                      link.hasDropdown && (
+                        <ChevronDownIcon className="size-5 text-brand-orange" />
+                      )
+                    )}
+                  </div>
+
+                  {/* The item's links slide open below it: the row grows from 0 to its full height (grid-rows 0fr → 1fr) */}
+                  {link.menu && (
+                    <div
+                      inert={!open}
+                      className={`grid transition-[grid-template-rows] duration-300 motion-reduce:transition-none ${
+                        open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                      }`}
+                    >
+                      <ul className="overflow-hidden">
+                        {[...link.menu.items, ...link.menu.feature.links].map(
+                          (item) => (
+                            <li key={item.href + item.label}>
+                              <Link
+                                href={item.href}
+                                onClick={() => setMenuOpen(false)}
+                                className="block border-l-2 border-brand-orange/30 py-2 pl-4 text-sm last:mb-3 hover:border-brand-orange hover:text-brand-orange"
+                              >
+                                {item.label}
+                              </Link>
+                            </li>
+                          ),
+                        )}
+                      </ul>
+                    </div>
                   )}
-                </Link>
-              </li>
-            ))}
+                </li>
+              );
+            })}
             <li className="py-3">
               <Link
                 href="/book-demo"

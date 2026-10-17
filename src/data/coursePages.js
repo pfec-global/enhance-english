@@ -1,6 +1,8 @@
 // The course pages (app/[program]/[course]/page.js), one for every course card on
-// the home page. All of them use the same template (components/CourseHero.jsx
-// and components/CourseCovered.jsx).
+// the home page: IELTS and PTE (data/programs.js) and Learn English
+// (data/languageCourses.js). All of them use the same template
+// (components/CourseHero.jsx, components/CourseCovered.jsx, components/CourseExplore.jsx).
+import { englishPageColors, languageCourses } from "@/data/languageCourses";
 import { ieltsProgram, pteProgram } from "@/data/programs";
 
 // TODO: only one course page has been designed so far, so every course shows
@@ -89,29 +91,116 @@ const sharedDetails = (program) => ({
   ],
 });
 
+// TODO: like the exam courses above, both English courses show these details
+// until each has its own. To give one course its own details, add them to that
+// course in data/languageCourses.js under `page: { ... }`.
+const englishDetails = {
+  highlights: ["2 Months of Course Access", "48 Hours of Expert Instruction"],
+  features: [
+    "Real-Life English | Easy Grammar",
+    "Interview Skills | Presentation Skills",
+    "Phonetics & Pronunciation",
+    "Idioms",
+    "Language & Interactive Club",
+  ],
+  actualPrice: "24,000",
+  offer: { label: "Limited Time Offer:", value: "35% Discount" },
+  effectivePrice: "22,000",
+  buyHref: "/checkout", // TODO: link to the real payment page
+  demoHref: "/book-demo",
+
+  covered: [
+    {
+      icon: "calendar",
+      title: "2 Months of Complete Course Access",
+      text: "24 classes over 2 months – 48 hours of expert instruction with practice support throughout the course.",
+    },
+    {
+      icon: "book",
+      half: true,
+      title: "Real-Life English & Easy Grammar",
+      text: "Learn the English used in everyday conversations, with grammar explained simply and practised in context.",
+    },
+    {
+      icon: "list",
+      half: true,
+      title: "Interview & Presentation Skills",
+      text: "Prepare for interviews and practise presenting with confidence, with feedback from your teacher.",
+    },
+    {
+      icon: "hourglass",
+      half: true,
+      title: "Phonetics & Pronunciation",
+      text: "Learn the sounds of English and how to pronounce words clearly and naturally.",
+    },
+    {
+      icon: "letter",
+      half: true,
+      title: "Usage of Idioms",
+      text: "Learn common idioms and expressions and when to use them.",
+    },
+    {
+      icon: "ticket",
+      title: "Language & Interactive Club",
+      text: "Join our Language Club and Interactive Club for regular speaking activities, tongue twisters, vocabulary-building activities, debates, and confidence-building sessions.",
+    },
+  ],
+};
+
 const programs = [ieltsProgram, pteProgram];
 
-export const coursePages = programs.flatMap((program) =>
+// "/ielts/crash-course" → "crash-course"
+const slugOf = (href) => href.split("/").pop();
+
+const examPages = programs.flatMap((program) =>
   program.courses.map((course) => ({
-    // "/ielts/crash-course" → program "ielts", slug "crash-course"
     program: program.id,
-    slug: course.href.split("/").pop(),
+    slug: slugOf(course.href),
     programName: program.name,
     title: course.title,
+    colors: program.coursePageColors,
+    testimonials: program.id, // only this exam's results
+    // "Explore Other" section: the exam's other courses, mock tests and exam registration
+    explore: {
+      program: program.id,
+      programName: program.name,
+      courses: program.courses.filter((other) => other !== course),
+      mockTests: program.mockTests,
+      exam: program.exam,
+      accentColor: program.accentColor, // calendar circles
+    },
     ...sharedDetails(program),
     ...course.page,
   })),
 );
 
+const englishPages = languageCourses.map((course) => ({
+  program: "learn-english",
+  slug: slugOf(course.href),
+  programName: "English",
+  title: course.title,
+  level: course.level, // shown after the title, not bold
+  colors: englishPageColors,
+  image: course.image,
+  imageAlt: "",
+  illustration: true, // shown whole, not cropped to a square photo
+  // "Explore Other" section: one row of IELTS course cards, then IELTS mock tests and exam registration
+  explore: {
+    program: ieltsProgram.id,
+    programName: ieltsProgram.name,
+    courses: ieltsProgram.courses.slice(0, 4),
+    mockTests: ieltsProgram.mockTests,
+    exam: ieltsProgram.exam,
+    accentColor: ieltsProgram.accentColor,
+  },
+  ...englishDetails,
+  ...course.page,
+}));
+
+export const coursePages = [...examPages, ...englishPages];
+
 export function getCoursePage(program, slug) {
   return coursePages.find(
     (page) => page.program === program && page.slug === slug,
   );
-}
-
-// The other courses of the same exam, for the "Explore Other Courses" cards.
-export function getOtherCourses(program, slug) {
-  return programs
-    .find(({ id }) => id === program)
-    .courses.filter((course) => !course.href.endsWith(`/${slug}`));
 }

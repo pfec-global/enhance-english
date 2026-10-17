@@ -1,15 +1,7 @@
-"use client";
-
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import Button from "@/components/Button";
+import LazyExamCalendar from "@/components/LazyExamCalendar";
 import { GiftIcon } from "@/components/icons";
-
-// The calendar depends on today's date, so it is loaded in the browser only.
-const ExamCalendar = dynamic(() => import("@/components/ExamCalendar"), {
-  ssr: false,
-  loading: () => <div className="aspect-square w-full" />, // holds the space while loading
-});
 
 export default function ExamRegisterCard({ exam }) {
   return (
@@ -39,7 +31,7 @@ export default function ExamRegisterCard({ exam }) {
 
       {/* Right: exam dates and price */}
       <div className="border-t border-black/25 p-6 md:my-4 md:border-t-0 md:border-l md:py-2">
-        <ExamCalendar weekdays={exam.examWeekdays} />
+        <LazyExamCalendar weekdays={exam.examWeekdays} />
 
         <p className="mt-4 text-[0.8125rem] font-semibold">
           Actual Price{" "}
