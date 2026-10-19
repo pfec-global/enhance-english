@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Button from "@/components/Button";
 import { CalendarIcon, MonitorIcon } from "@/components/icons";
 
@@ -7,10 +8,17 @@ const detailIcon = "mt-0.5 size-5 shrink-0 text-brand-orange";
 
 export default function CourseCard({ course }) {
   return (
-    // Hover: the card lifts and its yellow edge grows.
-    <article className="flex h-full flex-col border border-black/15 bg-card p-6 shadow-[0.25rem_0.25rem_0_var(--color-brand-yellow)] transition duration-300 hover:-translate-y-1.5 hover:shadow-[0.5rem_0.5rem_0_var(--color-brand-yellow)]">
-      <h3 className="text-[1.375rem] leading-tight font-semibold">
-        {course.title}
+    // Hover: the card lifts, its yellow edge grows and the title turns orange.
+    // The whole card opens the course: the title link stretches over it (after:inset-0),
+    // and the buttons sit above that (see Button.jsx).
+    <article className="group relative flex h-full flex-col border border-black/15 bg-card p-6 shadow-[0.25rem_0.25rem_0_var(--color-brand-yellow)] transition duration-300 hover:-translate-y-1.5 hover:shadow-[0.5rem_0.5rem_0_var(--color-brand-yellow)]">
+      <h3 className="text-[1.375rem] leading-tight font-semibold transition-colors group-hover:text-brand-orange">
+        <Link
+          href={course.href}
+          className="outline-none after:absolute after:inset-0 focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-brand-orange"
+        >
+          {course.title}
+        </Link>
       </h3>
 
       {/* The second detail drops to its own line when the card is too narrow */}

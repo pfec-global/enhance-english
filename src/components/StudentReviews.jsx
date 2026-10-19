@@ -2,7 +2,7 @@ import Link from "next/link";
 import MarqueeBand from "@/components/MarqueeBand";
 import Slider from "@/components/Slider";
 import { CalendarIcon } from "@/components/icons";
-import { reviews } from "@/data/reviews";
+import { reviews as builtInReviews } from "@/data/reviews";
 
 // The word "Google" in its own colours, one letter at a time.
 const googleLetters = [
@@ -42,7 +42,11 @@ function GoogleReviewsBadge() {
 }
 
 // Blue band with student reviews that slide past on their own.
-export default function StudentReviews() {
+// `reviews` in the shape of data/reviews.js; the pages pass the admin's (see lib/api.js).
+// Without any reviews the section is left out.
+export default function StudentReviews({ reviews = builtInReviews }) {
+  if (reviews.length === 0) return null;
+
   return (
     <MarqueeBand labelledBy="reviews" className="pb-[calc(1.75vw+5.5rem)]">
       {/* @container: the review cards below size themselves from this box's width */}

@@ -10,10 +10,12 @@ const detail = "flex items-start gap-2 text-[0.9375rem]";
 
 const detailIcon = "mt-0.5 size-5 shrink-0 text-brand-orange";
 
+// The whole card opens the event's details page: the title link stretches over the card,
+// and the two buttons sit above it so they keep their own links.
 export default function EventCard({ event }) {
   return (
     // Hover: the card lifts, its blue edge grows and the image zooms in.
-    <article className="group flex h-full flex-col border border-black/15 bg-card shadow-[0.25rem_0.25rem_0_var(--color-brand-blue)] transition duration-300 hover:-translate-y-1.5 hover:shadow-[0.5rem_0.5rem_0_var(--color-brand-blue)]">
+    <article className="group relative flex h-full flex-col border border-black/15 bg-card shadow-[0.25rem_0.25rem_0_var(--color-brand-blue)] transition duration-300 hover:-translate-y-1.5 hover:shadow-[0.5rem_0.5rem_0_var(--color-brand-blue)]">
       <div className="overflow-hidden">
         <Image
           src={event.image}
@@ -27,7 +29,12 @@ export default function EventCard({ event }) {
 
       <div className="flex flex-1 flex-col px-5 pt-4 pb-6">
         <h3 className="text-2xl leading-tight font-semibold text-brand-orange">
-          {event.title}
+          <Link
+            href={event.href}
+            className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:after:ring-2 focus-visible:after:ring-brand-orange focus-visible:after:ring-offset-2"
+          >
+            {event.title}
+          </Link>
         </h3>
 
         <p className={`${detail} mt-4`}>
@@ -40,7 +47,7 @@ export default function EventCard({ event }) {
         </p>
 
         {/* mt-auto keeps the buttons on the bottom line of every card */}
-        <div className="mt-auto flex flex-wrap gap-2.5 pt-5">
+        <div className="relative z-10 mt-auto flex flex-wrap gap-2.5 pt-5">
           <Link
             href={`${event.href}#register`}
             className={`${button} bg-brand-orange font-semibold text-white hover:bg-transparent hover:text-brand-orange`}

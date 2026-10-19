@@ -1,7 +1,14 @@
 import { Coiny, Montserrat, Titan_One } from "next/font/google";
+import CustomCourseModal from "@/components/CustomCourseModal";
 import DemoClassModal from "@/components/DemoClassModal";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import { navLinksWithCourses } from "@/data/navLinks";
+import {
+  getCourses,
+  getExamRegistrations,
+  getProgramExams,
+} from "@/lib/api";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -27,7 +34,16 @@ export const metadata = {
     "Join Enhance English's coaching classes or language clubs and build confidence in English for study, work, and life.",
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  // The IELTS, PTE and Learn English dropdowns list the admin's courses,
+  // and the Exam Registration dropdown its exam registration pages
+  const [courses, registrations, exams] = await Promise.all([
+    getCourses(),
+    getExamRegistrations(),
+    getProgramExams(),
+  ]);
+  const links = navLinksWithCourses(courses, registrations, exams);
+
   return (
     <html
       lang="en"
@@ -40,11 +56,13 @@ export default function RootLayout({ children }) {
         className="flex min-h-full flex-col bg-white font-sans text-ink"
         suppressHydrationWarning
       >
-        <Header />
+        <Header links={links} />
         <main className="flex-1">{children}</main>
         <Footer />
         {/* Opens from every "Book Free Demo Class" button (any link to /book-demo) */}
         <DemoClassModal />
+        {/* Opens from the "Make my Own Course" button (any link to /custom-course) */}
+        <CustomCourseModal />
       </body>
     </html>
   );

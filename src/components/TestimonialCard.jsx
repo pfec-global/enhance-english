@@ -7,7 +7,10 @@ export default function TestimonialCard({ testimonial, examName }) {
     <figure className="group overflow-hidden transition duration-300 hover:-translate-y-1.5 hover:shadow-xl">
       <Image
         src={testimonial.image}
-        alt={`${testimonial.name} — ${examName} score ${testimonial.score}`}
+        alt={
+          testimonial.imageAlt ??
+          `${testimonial.name} — ${examName} score ${testimonial.score}`
+        }
         width={2000}
         height={2000}
         sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 85vw"

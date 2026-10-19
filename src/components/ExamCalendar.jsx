@@ -29,15 +29,22 @@ function Day({ day, modifiers, children, ...cellProps }) {
   );
 }
 
+// "2026-10-23" -> 23 October 2026, midnight in the visitor's time zone
+const toDate = (value) => {
+  const [year, month, day] = value.split("-").map(Number);
+  return new Date(year, month - 1, day);
+};
+
 /*
   Month calendar that marks the exam days.
-  `weekdays` lists the days of the week with an exam, e.g. [4, 5] = every
-  Thursday and Friday (0 = Sunday … 6 = Saturday).
+  `dates` lists the exam dates, e.g. ["2026-10-23", "2026-10-24"] (picked one
+  by one in the admin).
   It opens on the current month; the arrows move one month at a time.
 */
-export default function ExamCalendar({ weekdays }) {
+export default function ExamCalendar({ dates }) {
   const [thisMonth] = useState(() => firstOfMonth(new Date()));
   const [month, setMonth] = useState(thisMonth);
+  const [examDays] = useState(() => dates.map(toDate));
 
   // No going back to months that have already passed.
   const atStart = month <= thisMonth;
@@ -47,7 +54,10 @@ export default function ExamCalendar({ weekdays }) {
       <div className="flex items-center gap-1">
         <h4 className="mr-auto text-[1.375rem] font-semibold">Exam Dates</h4>
         <span aria-live="polite" className="mr-1 text-[1.0625rem]">
-          {month.toLocaleDateString("en-GB", { month: "short", year: "numeric" })}
+          {month.toLocaleDateString("en-GB", {
+            month: "short",
+            year: "numeric",
+          })}
         </span>
         <button
           type="button"
@@ -74,7 +84,7 @@ export default function ExamCalendar({ weekdays }) {
         hideNavigation // the arrows above are used instead
         showOutsideDays
         fixedWeeks // always 6 rows, so the card height never jumps
-        modifiers={{ exam: { dayOfWeek: weekdays } }}
+        modifiers={{ exam: examDays }}
         components={{ Day }}
         formatters={{
           formatWeekdayName: (date) =>

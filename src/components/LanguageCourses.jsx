@@ -5,7 +5,8 @@ import Reveal from "@/components/Reveal";
 import Slider from "@/components/Slider";
 import { languageCourses } from "@/data/languageCourses";
 
-export default function LanguageCourses() {
+// `courses` in the shape of data/languageCourses.js; the home page passes the admin's (see lib/api.js).
+export default function LanguageCourses({ courses = languageCourses }) {
   return (
     <section
       aria-labelledby="language-courses"
@@ -47,7 +48,7 @@ export default function LanguageCourses() {
             slideClassName="w-[85%] sm:mx-auto sm:mt-8 sm:w-auto sm:max-w-[65.75rem] sm:first:mt-0"
           >
             {/* Each card appears as it scrolls into view */}
-            {languageCourses.map((course, index) => (
+            {courses.map((course, index) => (
               <Reveal key={course.id} className="grid h-full">
                 <LanguageCourseCard
                   course={course}

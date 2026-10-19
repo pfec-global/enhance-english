@@ -8,16 +8,23 @@ import {
   ListCheckIcon,
 } from "@/components/icons";
 
-const icons = {
-  handshake: HeartHandshakeIcon,
-  calendar: CalendarHeartIcon,
-  chat: ChatIcon,
-  list: ListCheckIcon,
-};
+// The 4 steps, the same on every exam page (not managed in the admin), e.g.
+// "We recommend the right IELTS option".
+const stepsFor = (name) => [
+  { icon: HeartHandshakeIcon, text: "Request a callback through the form" },
+  {
+    icon: CalendarHeartIcon,
+    text: "Our team contacts you to understand your needs",
+  },
+  { icon: ChatIcon, text: `We recommend the right ${name} option` },
+  { icon: ListCheckIcon, text: "Availability Check and Registration" },
+];
 
 // The 4 numbered steps of registering through us, joined by a bar in the
-// exam's colour. `page` comes from data/examRegistration.js.
+// exam's colour. `page` is in the shape of data/examRegistration.js.
 export default function RegistrationSteps({ page }) {
+  const steps = stepsFor(page.name);
+
   return (
     <section
       aria-labelledby="how-it-works"
@@ -31,9 +38,9 @@ export default function RegistrationSteps({ page }) {
 
         {/* 1 step per row on phones, 2 on tablets, all 4 in a row on desktop */}
         <ol className="mx-auto mt-8 grid max-w-5xl gap-8 text-left sm:grid-cols-2 lg:mt-10 lg:grid-cols-4 lg:gap-0">
-          {page.steps.map((step, index) => {
-            const StepIcon = icons[step.icon];
-            const last = index === page.steps.length - 1;
+          {steps.map((step, index) => {
+            const StepIcon = step.icon;
+            const last = index === steps.length - 1;
 
             return (
               <li key={step.text}>
@@ -61,8 +68,9 @@ export default function RegistrationSteps({ page }) {
         </ol>
 
         <p className="mt-10 text-sm">
-          Don’t wait! Free expert guidance &amp; ৳{page.cashback} Cashback are
-          yours to grab!
+          {page.cashback
+            ? `Don’t wait! Free expert guidance & ৳${page.cashback} Cashback are yours to grab!`
+            : "Don’t wait! Free expert guidance is yours to grab!"}
         </p>
         <Link
           href="#join"

@@ -5,22 +5,31 @@ const button =
   "flex items-center gap-3 rounded-sm border border-brand-orange px-4 py-2.5 text-sm font-semibold transition-colors";
 
 // Prices and the two buttons of a course. Shown in the hero and again in the
-// "What's Covered?" section. `course` comes from data/coursePages.js.
+// "What's Covered?" section. `course` comes from data/coursePages.js or the admin;
+// the actual price and the offer are optional (null when the course has none).
 export default function CoursePricing({ course }) {
+  const hasDiscount = Boolean(course.actualPrice || course.offer);
+
   return (
     <>
-      <div className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-2">
-        <p className="text-xs font-bold">
-          Actual Price{" "}
-          <s className="text-lg font-medium">৳{course.actualPrice}</s>
-        </p>
-        <p className="bg-brand-yellow px-2 py-1.5 text-xs">
-          {course.offer.label} <strong>{course.offer.value}</strong>
-        </p>
-      </div>
+      {hasDiscount && (
+        <div className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-2">
+          {course.actualPrice && (
+            <p className="text-xs font-bold">
+              Actual Price{" "}
+              <s className="text-lg font-medium">৳{course.actualPrice}</s>
+            </p>
+          )}
+          {course.offer && (
+            <p className="bg-brand-yellow px-2 py-1.5 text-xs">
+              {course.offer.label} <strong>{course.offer.value}</strong>
+            </p>
+          )}
+        </div>
+      )}
 
-      <p className="mt-2 text-sm">
-        Effective Price after Discount{" "}
+      <p className={`${hasDiscount ? "mt-2" : "mt-5"} text-sm`}>
+        {course.actualPrice ? "Effective Price after Discount" : "Price"}{" "}
         <strong className="text-[1.75rem] leading-none">
           ৳{course.effectivePrice}
         </strong>

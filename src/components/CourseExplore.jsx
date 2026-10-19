@@ -58,15 +58,26 @@ export default function CourseExplore({ explore, color }) {
           </Slider>
         </div>
 
-        {/* Mock tests and exam registration: stacked, side by side on desktop */}
-        {explore.exam && (
-          <div className="mx-auto mt-6 grid max-w-[80rem] gap-6 lg:mt-8 lg:grid-cols-[22rem_1fr]">
-            <Reveal className="grid">
-              <MockTestCard mockTests={explore.mockTests} />
-            </Reveal>
-            <Reveal delay={120} className="grid">
-              <ExamRegisterCard exam={explore.exam} />
-            </Reveal>
+        {/* Mock tests and exam registration: stacked, side by side on desktop.
+            Either can be missing; the other then takes the row. */}
+        {(explore.mockTests || explore.exam) && (
+          <div
+            className={`mx-auto mt-6 grid max-w-[80rem] gap-6 lg:mt-8 ${
+              explore.mockTests && explore.exam
+                ? "lg:grid-cols-[22rem_1fr]"
+                : ""
+            }`}
+          >
+            {explore.mockTests && (
+              <Reveal className="grid">
+                <MockTestCard mockTests={explore.mockTests} />
+              </Reveal>
+            )}
+            {explore.exam && (
+              <Reveal delay={120} className="grid">
+                <ExamRegisterCard exam={explore.exam} />
+              </Reveal>
+            )}
           </div>
         )}
       </div>

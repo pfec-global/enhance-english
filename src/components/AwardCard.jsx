@@ -8,7 +8,7 @@ export default function AwardCard({ award }) {
         {/* Hover: the photo zooms in */}
         <Image
           src={award.image}
-          alt={`${award.title} ${award.years} trophy`}
+          alt={award.imageAlt ?? `${award.title} ${award.years} trophy`}
           fill
           sizes="(min-width: 768px) 320px, 100vw"
           className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -21,16 +21,21 @@ export default function AwardCard({ award }) {
         </h3>
         <p className="text-2xl md:text-[1.75rem]">{award.years}</p>
 
+        {/* Awards added in the admin may have no logo: the organisation's name is shown instead */}
         <div className="mt-5 w-fit border border-black/25 bg-white px-3 pt-2 pb-3 shadow-[0.1875rem_0.1875rem_0_var(--color-brand-yellow)]">
           <p className="text-xs font-medium">Recognized By</p>
-          <Image
-            src={award.logo.src}
-            alt={award.recognizedBy}
-            width={award.logo.width}
-            height={award.logo.height}
-            sizes="176px"
-            className="mt-1.5 h-auto w-44"
-          />
+          {award.logo ? (
+            <Image
+              src={award.logo.src}
+              alt={award.logo.alt ?? award.recognizedBy}
+              width={award.logo.width}
+              height={award.logo.height}
+              sizes="176px"
+              className="mt-1.5 h-auto w-44"
+            />
+          ) : (
+            <p className="mt-1 text-lg font-semibold">{award.recognizedBy}</p>
+          )}
         </div>
 
         <p className="mt-6 md:mt-10">{award.description}</p>

@@ -5,7 +5,8 @@ const badge =
 
 // Top of an exam registration page: logo, title and intro on the left, a student
 // with two floating badges on the right, all on the exam's colour (orange for
-// IELTS, blue for PTE). `page` comes from data/examRegistration.js.
+// IELTS, blue for PTE). `page` is in the shape of data/examRegistration.js; without
+// a logo or a cashback, those are left out.
 export default function RegistrationHero({ page }) {
   return (
     <section
@@ -29,19 +30,22 @@ export default function RegistrationHero({ page }) {
       <div className="site-container relative grid items-center gap-8 py-10 lg:grid-cols-[1fr_auto] lg:py-12">
         {/* Intro — it slides in from the left one part after another on page load */}
         <div>
-          <div className="w-fit animate-slide-in rounded-lg bg-white px-4 py-2.5 motion-reduce:animate-none">
-            <Image
-              src={page.logo.src}
-              alt={page.logo.alt}
-              width={page.logo.width}
-              height={page.logo.height}
-              sizes="208px"
-              preload
-              className="h-10 w-auto sm:h-12"
-            />
-          </div>
+          {page.logo && (
+            <div className="mb-5 w-fit animate-slide-in rounded-lg bg-white px-4 py-2.5 motion-reduce:animate-none">
+              <Image
+                src={page.logo.src}
+                alt={page.logo.alt}
+                title={page.logo.title}
+                width={page.logo.width}
+                height={page.logo.height}
+                sizes="208px"
+                preload
+                className="h-10 w-auto sm:h-12"
+              />
+            </div>
+          )}
 
-          <h1 className="mt-5 max-w-[16em] animate-slide-in text-3xl leading-[1.25] font-bold [animation-delay:100ms] motion-reduce:animate-none sm:text-4xl lg:text-[2.625rem]">
+          <h1 className="max-w-[16em] animate-slide-in text-3xl leading-[1.25] font-bold [animation-delay:100ms] motion-reduce:animate-none sm:text-4xl lg:text-[2.625rem]">
             {page.title}
           </h1>
 
@@ -56,17 +60,17 @@ export default function RegistrationHero({ page }) {
 
         {/* Picture with the two badges floating over its top corners */}
         <div className="relative mx-auto w-full max-w-md animate-pop-in pt-8 [animation-delay:200ms] motion-reduce:animate-none lg:w-[28rem]">
-          <p className={`top-0 left-0 ${badge}`}>
-            <strong className="block text-lg sm:text-xl">
-              ৳{page.cashback}
-              <br />
-              Cashback
-            </strong>
-            <span className="text-xs">for all Registrants!</span>
-          </p>
-          <p
-            className={`top-6 right-0 [animation-delay:-3s] ${badge}`}
-          >
+          {page.cashback && (
+            <p className={`top-0 left-0 ${badge}`}>
+              <strong className="block text-lg sm:text-xl">
+                ৳{page.cashback}
+                <br />
+                Cashback
+              </strong>
+              <span className="text-xs">for all Registrants!</span>
+            </p>
+          )}
+          <p className={`top-6 right-0 [animation-delay:-3s] ${badge}`}>
             <strong className="block text-lg sm:text-xl">
               No Extra
               <br />
@@ -77,7 +81,8 @@ export default function RegistrationHero({ page }) {
 
           <Image
             src={page.heroImage}
-            alt=""
+            alt={page.heroImageAlt ?? ""}
+            title={page.heroImageTitle}
             width={800}
             height={604}
             sizes="(min-width: 1024px) 448px, (min-width: 512px) 448px, 100vw"

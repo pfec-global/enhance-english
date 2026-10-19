@@ -45,7 +45,7 @@ export const linkGroups = [
     links: [
       { label: "Coaching Classes", href: "/ielts" },
       { label: "Mock Tests", href: "/ielts/mock-tests" },
-      { label: "Exam Registration", href: "/exam-registration/ielts" },
+      { label: "Exam Registration", href: "/exam-registration" },
       { label: "What is IELTS?", href: "/ielts/what-is-ielts" },
     ],
   },

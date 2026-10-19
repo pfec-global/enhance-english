@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { blogCategories, blogSections } from "@/data/blogs";
-import { getBlogSections } from "@/lib/blogs";
+import { getBlogSections, MAX_SEARCH_LENGTH, searchBlogs } from "@/lib/blogs";
 import BlogHero from "@/components/BlogHero";
 import BlogCategoryBar from "@/components/BlogCategoryBar";
+import BlogListing from "@/components/BlogListing";
 import BlogSlider from "@/components/BlogSlider";
 import CustomCourse from "@/components/CustomCourse";
 import Reveal from "@/components/Reveal";
@@ -16,7 +17,47 @@ export const metadata = {
 // The posts are fetched from the blog CMS on every visit (nothing is cached), so the page is always up to date.
 export const dynamic = "force-dynamic";
 
-export default async function BlogsPage() {
+// The posts that match a search: from the blog CMS, or the built-in dummy posts whose title
+// matches if the CMS cannot be reached.
+async function loadSearchResults(query) {
+  const posts = await searchBlogs(query);
+  if (posts) return posts;
+  const search = query.toLowerCase();
+  return blogSections.flatMap((section) => section.posts).filter((post) => post.title.toLowerCase().includes(search));
+}
+
+export default async function BlogsPage({ searchParams }) {
+  // The search box of the hero opens /blogs?q=...: then the page shows the matching posts instead of the categories
+  const { q } = await searchParams;
+  const query = (typeof q === "string" ? q : "").trim().slice(0, MAX_SEARCH_LENGTH);
+
+  if (query) {
+    const results = await loadSearchResults(query);
+    return (
+      <>
+        <BlogHero query={query} />
+
+        <div className="border-b border-ink/10 bg-white">
+          <div className="site-container flex flex-wrap items-center justify-between gap-x-4 gap-y-2 py-4 text-xs sm:text-sm">
+            <p className="text-ink/70" role="status">
+              {results.length} {results.length === 1 ? "result" : "results"} for{" "}
+              <span className="font-semibold text-ink">“{query}”</span>
+            </p>
+            <Link href="/blogs" className="font-semibold text-accent hover:underline">
+              Clear search
+            </Link>
+          </div>
+        </div>
+
+        <BlogListing
+          posts={results}
+          searchable={false}
+          emptyText={`No posts found for “${query}”. Try another word, or explore the categories.`}
+        />
+      </>
+    );
+  }
+
   // The posts come from the blog CMS, grouped by category (12 newest per category).
   // If the CMS cannot be reached, the built-in dummy sections are shown instead.
   const cmsSections = await getBlogSections();

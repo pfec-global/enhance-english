@@ -1,5 +1,7 @@
-// The course pages (app/[program]/[course]/page.js), one for every course card on
-// the home page: IELTS and PTE (data/programs.js) and Learn English
+// The course pages (app/[program]/[course]/page.js). Their content is managed in
+// the admin (see getCourse in lib/api.js); the pages below are the built-in
+// content, shown when the admin cannot be reached: one for every built-in
+// course card, IELTS and PTE (data/programs.js) and Learn English
 // (data/languageCourses.js). All of them use the same template
 // (components/CourseHero.jsx, components/CourseCovered.jsx, components/CourseExplore.jsx).
 import { englishPageColors, languageCourses } from "@/data/languageCourses";
@@ -147,28 +149,45 @@ const englishDetails = {
   ],
 };
 
-const programs = [ieltsProgram, pteProgram];
+const examPrograms = { ielts: ieltsProgram, pte: pteProgram };
 
 // "/ielts/crash-course" → "crash-course"
 const slugOf = (href) => href.split("/").pop();
 
-const examPages = programs.flatMap((program) =>
+// The parts of a course page that are not managed in the admin: its colours,
+// which student results it shows and the "Explore Other" section (mock tests and
+// exam registration come from data/programs.js). Used by the built-in pages below
+// and for the admin's courses (app/[program]/[course]/page.js).
+// `courses` are the cards to explore: the exam's courses, or for English courses the IELTS ones.
+export function coursePageExtras(program, slug, courses) {
+  const exam = examPrograms[program];
+  // English pages explore the IELTS courses, mock tests and exam registration
+  const explored = exam ?? ieltsProgram;
+
+  return {
+    colors: exam ? exam.coursePageColors : englishPageColors,
+    testimonials: exam?.id, // only this exam's results
+    explore: {
+      program: explored.id,
+      programName: explored.name,
+      // The exam's other courses; one row of IELTS courses on English pages
+      courses: exam
+        ? courses.filter((other) => slugOf(other.href) !== slug)
+        : courses.slice(0, 4),
+      mockTests: explored.mockTests,
+      exam: explored.exam,
+      accentColor: explored.accentColor, // calendar circles
+    },
+  };
+}
+
+const examPages = Object.values(examPrograms).flatMap((program) =>
   program.courses.map((course) => ({
     program: program.id,
     slug: slugOf(course.href),
     programName: program.name,
     title: course.title,
-    colors: program.coursePageColors,
-    testimonials: program.id, // only this exam's results
-    // "Explore Other" section: the exam's other courses, mock tests and exam registration
-    explore: {
-      program: program.id,
-      programName: program.name,
-      courses: program.courses.filter((other) => other !== course),
-      mockTests: program.mockTests,
-      exam: program.exam,
-      accentColor: program.accentColor, // calendar circles
-    },
+    ...coursePageExtras(program.id, slugOf(course.href), program.courses),
     ...sharedDetails(program),
     ...course.page,
   })),
@@ -180,19 +199,10 @@ const englishPages = languageCourses.map((course) => ({
   programName: "English",
   title: course.title,
   level: course.level, // shown after the title, not bold
-  colors: englishPageColors,
   image: course.image,
   imageAlt: "",
   illustration: true, // shown whole, not cropped to a square photo
-  // "Explore Other" section: one row of IELTS course cards, then IELTS mock tests and exam registration
-  explore: {
-    program: ieltsProgram.id,
-    programName: ieltsProgram.name,
-    courses: ieltsProgram.courses.slice(0, 4),
-    mockTests: ieltsProgram.mockTests,
-    exam: ieltsProgram.exam,
-    accentColor: ieltsProgram.accentColor,
-  },
+  ...coursePageExtras("learn-english", slugOf(course.href), ieltsProgram.courses),
   ...englishDetails,
   ...course.page,
 }));

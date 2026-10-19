@@ -7,15 +7,15 @@ import { ChevronDownIcon } from "@/components/icons";
 const field =
   "w-full rounded-lg border border-(--form-border) bg-white px-3.5 py-2.5 text-sm outline-none placeholder:text-ink/50 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20";
 
-// The next `count` exam days from today, e.g. weekdays [4, 5] = every Thursday and Friday.
-function upcomingExamDays(today, weekdays, count) {
-  const days = [];
-  const day = new Date(today);
-  while (days.length < count) {
-    day.setDate(day.getDate() + 1);
-    if (weekdays.includes(day.getDay())) days.push(new Date(day));
-  }
-  return days;
+// The first `count` exam dates after today. `dates` are "2026-10-23", in order.
+function upcomingExamDays(today, dates, count) {
+  return dates
+    .map((value) => {
+      const [year, month, day] = value.split("-").map(Number);
+      return new Date(year, month - 1, day);
+    })
+    .filter((day) => day > today)
+    .slice(0, count);
 }
 
 const noSubscription = () => () => {};
@@ -57,7 +57,7 @@ export default function RegistrationForm({ page }) {
     () => null,
   );
   const examDays = today
-    ? upcomingExamDays(new Date(today), page.examWeekdays, 8)
+    ? upcomingExamDays(new Date(today), page.examDates, 8)
     : [];
 
   function handleSubmit(event) {
@@ -113,22 +113,27 @@ export default function RegistrationForm({ page }) {
             required
             className={field}
           />
-          <Select name="mode" label={page.form.modeLabel}>
-            {page.form.modes.map((mode) => (
-              <option key={mode}>{mode}</option>
-            ))}
-          </Select>
-          <Select name="date" label="Test Date">
-            {examDays.map((day) => {
-              const label = day.toLocaleDateString("en-GB", {
-                weekday: "short",
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-              });
-              return <option key={label}>{label}</option>;
-            })}
-          </Select>
+          {/* The choice and the test dates are left out when the page has none */}
+          {page.form.modes.length > 0 && (
+            <Select name="mode" label={page.form.modeLabel}>
+              {page.form.modes.map((mode) => (
+                <option key={mode}>{mode}</option>
+              ))}
+            </Select>
+          )}
+          {page.examDates.length > 0 && (
+            <Select name="date" label="Test Date">
+              {examDays.map((day) => {
+                const label = day.toLocaleDateString("en-GB", {
+                  weekday: "short",
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                });
+                return <option key={label}>{label}</option>;
+              })}
+            </Select>
+          )}
 
           <label className="flex items-start gap-2 text-xs">
             <input

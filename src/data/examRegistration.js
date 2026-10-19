@@ -1,8 +1,30 @@
-// The exam registration pages (app/exam-registration/[exam]/page.js):
-// /exam-registration/ielts and /exam-registration/pte. Both use the same
-// layout; PTE only changes the colours, logos and wording below.
+// The exam registration pages (app/exam-registration/[exam]/page.js) and the
+// list of them (app/exam-registration/page.js). The site shows the admin's
+// pages (see lib/api.js); these built-in IELTS and PTE pages are shown when the
+// admin cannot be reached, and have the same shape.
+// Every page uses the same layout; only the colours, logos and wording change.
 // Prices are written without the ৳ sign — the components add it.
 import { ieltsProgram, pteProgram } from "@/data/programs";
+
+// The colour themes the admin can choose. `main`: the hero, the "Exam Options"
+// band and the calendar circles; `form` and `formBorder`: the sign-up form.
+export const registrationThemes = {
+  orange: {
+    main: "var(--color-brand-orange)",
+    form: "#fdecea",
+    formBorder: "#f6b6ae",
+  },
+  blue: {
+    main: "var(--color-brand-blue)",
+    form: "#e4f6fa",
+    formBorder: "#9fdcec",
+  },
+  royal: {
+    main: "var(--color-brand-royal)",
+    form: "#e5f0f8",
+    formBorder: "#a9cbe6",
+  },
+};
 
 // TODO: placeholders until there are real venue photos.
 const venuePhotos = [
@@ -15,9 +37,12 @@ const venuePhotos = [
 const sharedDetails = (program) => ({
   exam: program.id,
   name: program.name,
+  href: `/exam-registration/${program.id}`,
   cashback: program.exam.cashback,
-  examWeekdays: program.exam.examWeekdays, // calendar circles, see data/programs.js
-  accentColor: program.accentColor,
+  actualPrice: program.exam.actualPrice,
+  effectivePrice: program.exam.effectivePrice,
+  examDates: program.exam.examDates, // calendar circles, see data/programs.js
+  mockTests: program.mockTests,
 
   // Grey box under "Why Register through us?"
   notes: [
@@ -26,24 +51,15 @@ const sharedDetails = (program) => ({
     "Fees are based on current official rates and may be updated by the test provider.",
   ],
 
-  // The 4 numbered steps. `icon` is one of: handshake, calendar, chat, list.
-  steps: [
-    { icon: "handshake", text: "Request a callback through the form" },
-    { icon: "calendar", text: "Our team contacts you to understand your needs" },
-    { icon: "chat", text: `We recommend the right ${program.name} option` },
-    { icon: "list", text: "Availability Check and Registration" },
-  ],
-
   venuePhotos,
 });
 
 const ielts = {
   ...sharedDetails(ieltsProgram),
-  colors: {
-    main: "var(--color-brand-orange)", // hero and "Exam Options" backgrounds
-    form: "#fdecea", // sign-up form background
-    formBorder: "#f6b6ae", // sign-up form fields
-  },
+  theme: "orange",
+  colors: registrationThemes.orange,
+  // The small line under the exam in the menu and on the list of exams
+  tagline: "British Council Certified Registration Center",
   logo: {
     src: "/image/ielts_british_logo.png",
     width: 444,
@@ -124,11 +140,9 @@ const ielts = {
 
 const pte = {
   ...sharedDetails(pteProgram),
-  colors: {
-    main: "var(--color-brand-blue)",
-    form: "#e4f6fa",
-    formBorder: "#9fdcec",
-  },
+  theme: "blue",
+  colors: registrationThemes.blue,
+  tagline: "PTE Academic, UKVI & Core",
   logo: {
     src: "/image/pearson_pte_logo.png",
     width: 3488,

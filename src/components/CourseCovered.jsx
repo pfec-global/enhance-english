@@ -19,7 +19,7 @@ const icons = {
 };
 
 // "What's Covered?" on a course page: what the course includes on the left, the
-// price card on the right. `course` comes from data/coursePages.js.
+// price card on the right. `course` comes from data/coursePages.js or the admin.
 export default function CourseCovered({ course }) {
   return (
     <section aria-labelledby="covered" className="relative bg-surface">
@@ -49,7 +49,7 @@ export default function CourseCovered({ course }) {
 
               return (
                 <li
-                  key={item.title}
+                  key={index}
                   className={item.half ? "" : "sm:col-span-2"}
                 >
                   {/* Each card appears as it scrolls into view */}
@@ -66,10 +66,10 @@ export default function CourseCovered({ course }) {
                         />
                       </div>
                       <p className="mt-2 text-[0.9375rem]">{item.text}</p>
-                      {item.points && (
+                      {item.points?.length > 0 && (
                         <ul className="mt-1 list-disc pl-9 text-[0.9375rem]">
-                          {item.points.map((point) => (
-                            <li key={point}>{point}</li>
+                          {item.points.map((point, pointIndex) => (
+                            <li key={pointIndex}>{point}</li>
                           ))}
                         </ul>
                       )}

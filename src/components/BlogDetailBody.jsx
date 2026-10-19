@@ -5,9 +5,10 @@ import BlogSideCta from "@/components/BlogSideCta";
 import PromoBanner from "@/components/PromoBanner";
 
 // Body of the blog details page: everything under the hero.
-// content is markdown. The sidebar is optional: showCta shows the default promo card,
-// banners is the list of extra dark promo cards (can be empty).
-export default function BlogDetailBody({ content, showCta = false, banners = [] }) {
+// content is markdown. The sidebar is optional: showCta shows the promo card (cta changes its
+// title, text, button and link, see BlogSideCta), banners is the list of extra dark promo cards (can be empty).
+// Also used for the description of the exam registration pages.
+export default function BlogDetailBody({ content, showCta = false, cta = {}, banners = [] }) {
   // Every h2 of the markdown becomes one line of the "Jump to Topic" box
   const headings = getHeadings(content);
   // The sidebar only appears if the page has the promo card or at least one banner
@@ -33,7 +34,7 @@ export default function BlogDetailBody({ content, showCta = false, banners = [] 
         {/* The sidebar floats beside the content while scrolling (desktop only - on smaller screens it is below the content) */}
         {hasSidebar && (
           <div className="mx-auto w-full max-w-xs space-y-6 lg:sticky lg:top-28">
-            {showCta && <BlogSideCta />}
+            {showCta && <BlogSideCta {...cta} />}
             {banners.map((banner) => (
               <PromoBanner key={banner.title} {...banner} />
             ))}

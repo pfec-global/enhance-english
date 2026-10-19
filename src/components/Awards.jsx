@@ -2,9 +2,10 @@ import AwardCard from "@/components/AwardCard";
 import MarqueeBand from "@/components/MarqueeBand";
 import Slider from "@/components/Slider";
 import { CalendarHeartIcon } from "@/components/icons";
-import { awards } from "@/data/awards";
+import { awards as builtInAwards } from "@/data/awards";
 
-export default function Awards() {
+// `awards` in the shape of data/awards.js; the home page passes the admin's (see lib/api.js).
+export default function Awards({ awards = builtInAwards }) {
   return (
     <MarqueeBand labelledBy="awards">
       <div className="site-container pt-10 text-center lg:pt-12">

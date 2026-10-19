@@ -7,7 +7,8 @@ const PER_PAGE = 12;
 
 // A list of posts (author page, category page): sort, search by title, a grid of cards and the pagination.
 // Sorting, searching and paging all happen here in the browser on the posts that were passed in.
-export default function BlogPostList({ posts }) {
+// searchable={false} leaves the search box out. emptyText replaces the message shown when there are no posts.
+export default function BlogPostList({ posts, searchable = true, emptyText = "There are no posts here yet." }) {
   const topRef = useRef(null);
   const [sort, setSort] = useState("recent");
   const [query, setQuery] = useState("");
@@ -51,29 +52,31 @@ export default function BlogPostList({ posts }) {
           </select>
         </label>
 
-        <div className="relative w-full sm:w-72">
-          <input
-            type="search"
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setPage(1);
-            }}
-            placeholder="Search Topic"
-            aria-label="Search posts"
-            className="w-full rounded-lg border border-ink/10 bg-white py-2.5 pl-4 pr-10 text-sm outline-none transition focus:border-accent"
-          />
-          <svg
-            className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-accent"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <circle cx="11" cy="11" r="7" />
-            <path d="M20 20l-3.5-3.5" strokeLinecap="round" />
-          </svg>
-        </div>
+        {searchable && (
+          <div className="relative w-full sm:w-72">
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setPage(1);
+              }}
+              placeholder="Search Topic"
+              aria-label="Search posts"
+              className="w-full rounded-lg border border-ink/10 bg-white py-2.5 pl-4 pr-10 text-sm outline-none transition focus:border-accent"
+            />
+            <svg
+              className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-accent"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <path d="M20 20l-3.5-3.5" strokeLinecap="round" />
+            </svg>
+          </div>
+        )}
       </div>
 
       {visible.length > 0 ? (
@@ -85,7 +88,7 @@ export default function BlogPostList({ posts }) {
         </div>
       ) : (
         <p className="mt-6 rounded-xl bg-white px-4 py-12 text-center text-sm text-ink/70">
-          {query.trim() ? `No posts found for “${query.trim()}”.` : "There are no posts here yet."}
+          {query.trim() ? `No posts found for “${query.trim()}”.` : emptyText}
         </p>
       )}
 

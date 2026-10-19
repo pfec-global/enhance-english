@@ -7,11 +7,12 @@ const variants = {
 };
 
 // Small orange link button used on the cards. variant: "solid" or "outline".
+// relative z-10: it stays clickable above a card's full-card link (see CourseCard.jsx).
 export default function Button({ href, variant = "solid", children }) {
   return (
     <Link
       href={href}
-      className={`rounded-md border border-brand-orange px-4 py-2 text-center text-[0.9375rem] whitespace-nowrap transition-colors ${variants[variant]}`}
+      className={`relative z-10 rounded-md border border-brand-orange px-4 py-2 text-center text-[0.9375rem] whitespace-nowrap transition-colors ${variants[variant]}`}
     >
       {children}
     </Link>

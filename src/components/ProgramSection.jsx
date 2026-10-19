@@ -42,8 +42,7 @@ export default function ProgramSection({ program }) {
           </h2>
           <p className="mt-3 text-sm sm:text-base">
             Join <strong>expert-led courses and mock tests</strong> designed to
-            help you achieve your target score. Prepare smarter, succeed
-            faster.
+            help you achieve your target score. Prepare smarter, succeed faster.
           </p>
         </div>
 
@@ -66,15 +65,28 @@ export default function ProgramSection({ program }) {
           </Slider>
         </div>
 
-        {/* Mock tests and exam registration: stacked, side by side on desktop */}
-        <div className="mx-auto mt-8 grid max-w-[80rem] gap-6 lg:mt-12 lg:grid-cols-[22rem_1fr]">
-          <Reveal className="grid">
-            <MockTestCard mockTests={program.mockTests} />
-          </Reveal>
-          <Reveal delay={120} className="grid">
-            <ExamRegisterCard exam={program.exam} />
-          </Reveal>
-        </div>
+        {/* Mock tests and exam registration: stacked, side by side on desktop.
+            Either can be missing (see withProgramExam in data/programs.js); the other then takes the row. */}
+        {(program.mockTests || program.exam) && (
+          <div
+            className={`mx-auto mt-8 grid max-w-[80rem] gap-6 lg:mt-12 ${
+              program.mockTests && program.exam
+                ? "lg:grid-cols-[22rem_1fr]"
+                : ""
+            }`}
+          >
+            {program.mockTests && (
+              <Reveal className="grid">
+                <MockTestCard mockTests={program.mockTests} />
+              </Reveal>
+            )}
+            {program.exam && (
+              <Reveal delay={120} className="grid">
+                <ExamRegisterCard exam={program.exam} />
+              </Reveal>
+            )}
+          </div>
+        )}
       </div>
     </section>
   );

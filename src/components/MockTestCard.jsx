@@ -2,6 +2,9 @@ import Image from "next/image";
 import Button from "@/components/Button";
 import { BulbIcon } from "@/components/icons";
 
+// "Paper Based Mock Tests" next to the exam card (home page, course pages).
+// `mockTests` is { title, href, packages: [{ label, price }] }; the admin's comes from
+// the exam's registration page (see lib/api.js), the built-in from data/programs.js.
 export default function MockTestCard({ mockTests }) {
   return (
     <article className="flex h-full flex-col border border-black/15 bg-[#fdf7e3] p-6 shadow-[0.25rem_0.25rem_0_var(--color-brand-yellow)]">
@@ -22,10 +25,9 @@ export default function MockTestCard({ mockTests }) {
         />
       </div>
 
-      <h3 className="mt-3 text-[1.375rem] leading-tight font-semibold">
-        Paper Based
-        <br />
-        Mock Tests
+      {/* Narrow, so "Paper Based Mock Tests" breaks over two lines as in the design */}
+      <h3 className="mt-3 max-w-[8em] text-[1.375rem] leading-tight font-semibold">
+        {mockTests.title}
       </h3>
 
       <ul className="mt-3 text-[1.0625rem]">

@@ -3,9 +3,11 @@ import Reveal from "@/components/Reveal";
 import { ArrowRightIcon } from "@/components/icons";
 
 // "… Exam Options, Formats & Fees": one white card per test, on the exam's
-// colour. `page` comes from data/examRegistration.js.
+// colour. `page` is in the shape of data/examRegistration.js; without options
+// the section is left out.
 export default function RegistrationOptions({ page }) {
   const { options } = page;
+  if (options.items.length === 0) return null;
 
   return (
     <section
@@ -26,10 +28,13 @@ export default function RegistrationOptions({ page }) {
             <li key={item.name.join(" ")}>
               <Reveal delay={index * 120} className="grid h-full">
                 <article className="rounded-xl bg-white p-6 transition duration-300 hover:-translate-y-1.5 hover:shadow-xl">
+                  {/* The name on one or two lines, e.g. "IELTS" / "Academic" */}
                   <h3 className="text-2xl leading-tight font-bold">
-                    {item.name[0]}
-                    <br />
-                    {item.name[1]}
+                    {item.name.map((line) => (
+                      <span key={line} className="block">
+                        {line}
+                      </span>
+                    ))}
                   </h3>
                   <span className="mt-4 block h-1 w-14 bg-(--main)" />
 
@@ -54,8 +59,7 @@ export default function RegistrationOptions({ page }) {
         </ul>
 
         <p className="mt-8 text-sm text-white/90">
-          Considering any one of these? We can help you out with the next
-          steps.
+          Considering any one of these? We can help you out with the next steps.
         </p>
         <Link
           href="#join"

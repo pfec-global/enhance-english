@@ -1,15 +1,23 @@
-// The "What is IELTS?" and "What is PTE?" pages (app/ielts/what-is-ielts,
-// app/pte/what-is-pte). Both use components/ExamInfoPage.jsx with the details below.
+// Exam pages such as "What is IELTS?" (/ielts/what-is-ielts) and "What is PTE?"
+// (/pte/what-is-pte), shown with components/ExamInfoPage.jsx by
+// app/[program]/[course]/page.js. Their content is managed in the admin
+// (see getExamPage in lib/api.js); the two pages below are the built-in
+// content, shown when the admin cannot be reached.
 // TODO: test lengths, result times and other figures follow the test owners'
 // websites at the time of writing — check them again before going live.
 import { ieltsProgram, pteProgram } from "@/data/programs";
+
+// The colours of each program's exam pages: they follow its course pages
+export const examStyles = {
+  ielts: { colors: ieltsProgram.coursePageColors, accent: "var(--color-brand-orange)" },
+  pte: { colors: pteProgram.coursePageColors, accent: "var(--color-brand-blue)" },
+};
 
 export const ieltsInfo = {
   exam: "ielts",
   name: "IELTS",
   fullName: "International English Language Testing System",
-  colors: ieltsProgram.coursePageColors,
-  accent: "var(--color-brand-orange)",
+  ...examStyles.ielts,
   logo: { src: "/image/ielts_logo.png", width: 253, height: 100 },
   intro:
     "IELTS is the world’s most popular English language test for study, work and migration. It checks how well you listen, read, write and speak in English, and is accepted by more than 12,500 organisations in over 140 countries, including universities, employers and immigration authorities in the UK, Australia, Canada, New Zealand and the USA.",
@@ -112,14 +120,16 @@ export const ieltsInfo = {
 
   courseHref: "/ielts",
   registerHref: "/exam-registration/ielts",
+  seo: {
+    title: "What is IELTS? Test Types, Format & Scoring | Enhance English",
+  },
 };
 
 export const pteInfo = {
   exam: "pte",
   name: "PTE",
   fullName: "Pearson Test of English",
-  colors: pteProgram.coursePageColors,
-  accent: "var(--color-brand-blue)",
+  ...examStyles.pte,
   logo: { src: "/image/pearson_pte_logo.png", width: 3488, height: 1070 },
   intro:
     "PTE is a computer-based English test by Pearson. It checks your speaking, writing, reading and listening in one sitting, is marked by computer for fair and fast results, and is accepted by thousands of universities as well as the governments of Australia, New Zealand, the UK and Canada.",
@@ -213,4 +223,13 @@ export const pteInfo = {
 
   courseHref: "/pte",
   registerHref: "/exam-registration/pte",
+  seo: {
+    title: "What is PTE? Test Types, Format & Scoring | Enhance English",
+  },
+};
+
+// The built-in pages by address, e.g. builtInExamPages["ielts/what-is-ielts"]
+export const builtInExamPages = {
+  "ielts/what-is-ielts": ieltsInfo,
+  "pte/what-is-pte": pteInfo,
 };

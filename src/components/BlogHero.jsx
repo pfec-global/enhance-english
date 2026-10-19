@@ -2,7 +2,8 @@ import Image from "next/image";
 
 // Hero of the blog list page: title and search on the left, the students in
 // circles on the right (below on phones), on an indigo background.
-export default function BlogHero() {
+// query is the current search, shown in the search box.
+export default function BlogHero({ query = "" }) {
   return (
     <section className="overflow-hidden bg-[#1d297c] text-white">
       <div className="site-container grid items-center gap-8 py-10 md:grid-cols-[minmax(0,1fr)_auto] lg:gap-12 lg:py-14">
@@ -15,14 +16,19 @@ export default function BlogHero() {
             prepare smarter and reach your target score.
           </p>
 
-          {/* Search box - not connected yet (also not on the PFEC India site this page was copied from) */}
+          {/* Search box: opens /blogs?q=..., where the page asks the blog CMS for the matching posts */}
           <form
+            key={query}
             role="search"
+            action="/blogs"
             className="relative mt-6 max-w-sm animate-fade-up [animation-delay:200ms] motion-reduce:animate-none"
           >
             <input
               type="search"
               name="q"
+              defaultValue={query}
+              maxLength={100}
+              required
               placeholder="Search Topic"
               aria-label="Search blog topics"
               className="w-full rounded-xl bg-white py-3.5 pr-12 pl-4 text-sm text-ink shadow-sm outline-none ring-accent/40 transition placeholder:text-ink/60 focus:ring-2"

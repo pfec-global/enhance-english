@@ -140,6 +140,27 @@ export const getBlogCategory = safely(async (slug) => {
   return { name: category.name.trim(), slug: category.slug, posts };
 });
 
+// The longest search the blog list page passes on to the CMS
+export const MAX_SEARCH_LENGTH = 100;
+
+// Search of the blog list page (/blogs?q=...), newest first. The CMS does the matching:
+// a post matches when each word (up to 8) is in its title, summary or category name, ignoring case.
+// "speaking tips" finds "PTE Speaking: 5 Proven Tips".
+export const searchBlogs = safely(async (query) => {
+  const words = query.slice(0, MAX_SEARCH_LENGTH).split(/\s+/).filter(Boolean).slice(0, 8);
+  if (words.length === 0) return [];
+  return fetchAllPosts(
+    words.flatMap((word, i) => {
+      const value = encodeURIComponent(word);
+      return [
+        `filters[$and][${i}][$or][0][title][$containsi]=${value}`,
+        `filters[$and][${i}][$or][1][summary][$containsi]=${value}`,
+        `filters[$and][${i}][$or][2][category][name][$containsi]=${value}`,
+      ];
+    }),
+  );
+});
+
 // Strapi rich text ([{ type: "paragraph", children: [{ text }] }]) -> plain text
 const plainText = (blocks) =>
   Array.isArray(blocks)

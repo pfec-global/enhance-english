@@ -50,16 +50,16 @@ export default function CourseHero({ course }) {
 
           <div className="animate-slide-in [animation-delay:200ms] motion-reduce:animate-none">
             <div className="mt-5 font-semibold sm:text-lg">
-              {course.highlights.map((line) => (
-                <p key={line} className="mt-1">
+              {course.highlights.map((line, index) => (
+                <p key={index} className="mt-1">
                   {line}
                 </p>
               ))}
             </div>
 
             <ul className="mt-5 space-y-1.5 sm:text-lg">
-              {course.features.map((feature) => (
-                <li key={feature} className="flex items-center gap-4">
+              {course.features.map((feature, index) => (
+                <li key={index} className="flex items-center gap-4">
                   <span className="size-2.5 shrink-0 rounded-full bg-brand-orange" />
                   {feature}
                 </li>

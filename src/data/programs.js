@@ -1,9 +1,28 @@
 // The IELTS and PTE sections on the home page: courses, mock tests and exam registration.
 // Both sections use the same layout (components/ProgramSection.jsx) with the data below.
+// The site shows the admin's courses, mock tests and exam card (see withProgramExam below
+// and app/page.js); these are shown when the admin cannot be reached.
 // Prices are written without the ৳ sign — the components add it.
+
+// Every Thursday and Friday of the next six months, as "2026-10-23": the built-in exam dates
+function builtInExamDates() {
+  const dates = [];
+  const day = new Date();
+  const end = new Date(day.getFullYear(), day.getMonth() + 6, day.getDate());
+  for (; day < end; day.setDate(day.getDate() + 1)) {
+    if (day.getDay() === 4 || day.getDay() === 5) {
+      const pad = (number) => String(number).padStart(2, "0");
+      dates.push(
+        `${day.getFullYear()}-${pad(day.getMonth() + 1)}-${pad(day.getDate())}`,
+      );
+    }
+  }
+  return dates;
+}
 
 // The mock test card is the same in both sections.
 const mockTests = {
+  title: "Paper Based Mock Tests",
   href: "/mock-tests",
   packages: [
     { label: "1 Test", price: "1,800" },
@@ -83,9 +102,8 @@ export const ieltsProgram = {
     actualPrice: "24,000",
     cashback: "2,000",
     effectivePrice: "22,000",
-    // Weekdays with an exam, every month. They show as coloured circles in the calendar.
-    // 0 = Sunday, 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday, 6 = Saturday
-    examWeekdays: [4, 5],
+    // Exam dates ("2026-10-23"). They show as coloured circles in the calendar.
+    examDates: builtInExamDates(),
   },
 };
 
@@ -151,13 +169,52 @@ export const pteProgram = {
 
   exam: {
     title: "Register for PTE Exam",
-    description:
-      "We help you enrol for your PTE exam with ease and clarity.",
+    description: "We help you enrol for your PTE exam with ease and clarity.",
     image: "/image/exam_student_2.png",
     href: "/exam-registration/pte",
     actualPrice: "24,000",
     cashback: "2,000",
     effectivePrice: "22,000",
-    examWeekdays: [4, 5], // every Thursday and Friday, same as IELTS
+    examDates: builtInExamDates(), // every Thursday and Friday, same as IELTS
   },
 };
+
+// The program with the admin's exam card and mock test card:
+// - the prices, cashback, exam dates and mock test packages are set on the program's courses
+//   page in the admin (lib/api.js getProgramExams); until they are saved there both cards are left out;
+// - the card's heading, intro, student photo and link follow the exam's registration page
+//   (lib/api.js getExamRegistrations) when it has a published one.
+// Without `exams` (the admin cannot be reached) the built-in cards stay.
+export function withProgramExam(program, exams, registrations) {
+  if (!exams) return program;
+
+  const settings = exams[program.id];
+  if (!settings) return { ...program, exam: null, mockTests: null };
+
+  const page = registrations?.find((item) => item.exam === program.id);
+
+  return {
+    ...program,
+    exam: {
+      ...program.exam,
+      ...(page && {
+        title: `Register for ${page.name} Exam`,
+        description: page.text,
+        image: page.heroImage,
+        href: page.href,
+      }),
+      actualPrice: settings.actualPrice,
+      cashback: settings.cashback,
+      effectivePrice: settings.effectivePrice,
+      examDates: settings.examDates,
+    },
+    mockTests:
+      settings.mockTests.packages.length > 0
+        ? {
+            ...mockTests,
+            title: settings.mockTests.title,
+            packages: settings.mockTests.packages,
+          }
+        : null,
+  };
+}

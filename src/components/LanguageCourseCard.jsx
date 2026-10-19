@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import Button from "@/components/Button";
 import {
   CalendarIcon,
@@ -23,9 +24,11 @@ const icon = "size-5 shrink-0 text-brand-orange";
 // On phones the picture sits on top. `imageRight` puts it on the right instead of the left.
 export default function LanguageCourseCard({ course, imageRight = false }) {
   return (
-    // Hover: the card lifts, its yellow edge grows and the picture zooms in.
+    // Hover: the card lifts, its yellow edge grows, the picture zooms in and the title turns orange.
+    // The whole card opens the course: the title link stretches over it (after:inset-0),
+    // and the buttons sit above that (see Button.jsx).
     <article
-      className={`group flex flex-col border border-black/15 bg-card shadow-[0.25rem_0.25rem_0_var(--color-brand-yellow)] transition duration-300 hover:-translate-y-1.5 hover:shadow-[0.5rem_0.5rem_0_var(--color-brand-yellow)] md:flex-row ${
+      className={`group relative flex flex-col border border-black/15 bg-card shadow-[0.25rem_0.25rem_0_var(--color-brand-yellow)] transition duration-300 hover:-translate-y-1.5 hover:shadow-[0.5rem_0.5rem_0_var(--color-brand-yellow)] md:flex-row ${
         imageRight ? "md:flex-row-reverse" : ""
       }`}
     >
@@ -44,7 +47,12 @@ export default function LanguageCourseCard({ course, imageRight = false }) {
 
       <div className="flex-1 px-6 pt-6 pb-7 lg:pt-7 lg:pr-14 lg:pb-8">
         <h3 className="text-[1.4375rem] leading-tight font-semibold">
-          {course.title}
+          <Link
+            href={course.href}
+            className="outline-none transition-colors group-hover:text-brand-orange after:absolute after:inset-0 focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-brand-orange"
+          >
+            {course.title}
+          </Link>
           <span className="block font-normal">{course.level}</span>
         </h3>
 

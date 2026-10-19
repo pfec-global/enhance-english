@@ -13,8 +13,8 @@ const detailIcon = "mt-0.5 size-5 shrink-0 text-brand-orange";
 
 // Top of an event details page: what, when and where on the left, the event
 // picture on the right (below on phones), in the style of the event cards.
-// `event` comes from data/events.js.
-export default function EventHero({ event }) {
+// `event` is in the shape of data/events.js. ended: the event day has gone by, so there is no registration.
+export default function EventHero({ event, ended = false }) {
   return (
     <section className="bg-[#e4f6fa]">
       <div className="site-container grid items-center gap-8 py-10 lg:grid-cols-2 lg:gap-14 lg:py-14">
@@ -47,8 +47,9 @@ export default function EventHero({ event }) {
             </ol>
           </nav>
 
-          <p className="mt-5 w-fit animate-fade-up bg-brand-orange px-2 py-1 text-sm font-bold text-white [animation-delay:100ms] motion-reduce:animate-none">
-            {event.type}
+          <p className="mt-5 flex animate-fade-up flex-wrap gap-2 text-sm font-bold text-white [animation-delay:100ms] motion-reduce:animate-none">
+            <span className="bg-brand-orange px-2 py-1">{event.type}</span>
+            {ended && <span className="bg-ink/70 px-2 py-1">Event Ended</span>}
           </p>
           <h1 className="mt-3 animate-fade-up text-3xl leading-tight font-semibold text-brand-orange [animation-delay:100ms] motion-reduce:animate-none sm:text-4xl lg:text-[2.625rem]">
             {event.title}
@@ -68,22 +69,26 @@ export default function EventHero({ event }) {
             </li>
             <li className={detail}>
               <TicketIcon className={detailIcon} strokeWidth={1.5} />
-              Free entry — registration required
+              {ended
+                ? "This event has ended"
+                : "Free entry — registration required"}
             </li>
           </ul>
 
-          <a
-            href="#register"
-            className="mt-7 inline-block animate-fade-up rounded-md border border-brand-orange bg-brand-orange px-5 py-2.5 font-semibold text-white transition-colors [animation-delay:300ms] hover:bg-transparent hover:text-brand-orange motion-reduce:animate-none"
-          >
-            Register for Free
-          </a>
+          {!ended && (
+            <a
+              href="#register"
+              className="mt-7 inline-block animate-fade-up rounded-md border border-brand-orange bg-brand-orange px-5 py-2.5 font-semibold text-white transition-colors [animation-delay:300ms] hover:bg-transparent hover:text-brand-orange motion-reduce:animate-none"
+            >
+              Register for Free
+            </a>
+          )}
         </div>
 
         <div className="animate-pop-in border border-black/15 bg-card shadow-[0.5rem_0.5rem_0_var(--color-brand-blue)] [animation-delay:200ms] motion-reduce:animate-none">
           <Image
             src={event.image}
-            alt=""
+            alt={event.imageAlt ?? ""}
             width={1200}
             height={628}
             sizes="(min-width: 1024px) 45vw, 100vw"
