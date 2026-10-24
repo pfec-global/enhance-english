@@ -162,6 +162,13 @@ export const getProgramExams = safely(() => fetchApi("program-exams"));
 // or undefined when the admin cannot be reached.
 export const getEvents = safely(async () => (await fetchApi("events")).map(toEvent));
 
+// The same events grouped by month for the timeline on /events, soonest first:
+// [{ month: "2026-10", label: "Oct", year: 2026, events: [...] }], each event in the shape of
+// data/events.js. undefined when the admin cannot be reached.
+export const getEventMonths = safely(async () =>
+  (await fetchApi("event-months")).map((month) => ({ ...month, events: month.events.map(toEvent) })),
+);
+
 // One event for its details page, e.g. /events/ielts-grammar-workshop, in the shape of data/events.js.
 // Past events are included so old links keep working. null if the admin has no such published event,
 // undefined when the admin cannot be reached.
@@ -193,6 +200,17 @@ export const getExamRegistration = safely(async (slug) => {
   const page = await fetchApi(`exam-registrations/${encodeURIComponent(slug)}`);
   return page && toRegistrationPage(page);
 });
+
+// "Meet the Team behind Enhance English" on the About Us page, in the shape of data/team.js:
+// { id, name, role, photo, photoAlt, socials: [{ network, label, url }] }, only the filled-in
+// profiles. undefined when the admin cannot be reached.
+export const getTeamMembers = safely(async () =>
+  (await fetchApi("team-members")).map((member) => ({
+    ...member,
+    photo: member.photo?.src,
+    photoAlt: member.photo?.alt,
+  })),
+);
 
 // The "Here's What Our Students Say" reviews, in the shape of data/reviews.js,
 // or undefined when the admin cannot be reached.

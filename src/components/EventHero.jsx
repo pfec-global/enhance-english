@@ -1,100 +1,66 @@
 import Image from "next/image";
-import Link from "next/link";
-import {
-  CalendarIcon,
-  ChevronDownIcon,
-  MapPinIcon,
-  TicketIcon,
-} from "@/components/icons";
+import { CalendarIcon, MapPinIcon } from "@/components/icons";
 
-const detail = "flex items-start gap-2.5";
+const detail = "flex items-start gap-2 text-sm font-semibold";
 
-const detailIcon = "mt-0.5 size-5 shrink-0 text-brand-orange";
+const detailIcon = "mt-px size-4.5 shrink-0 text-brand-orange";
 
-// Top of an event details page: what, when and where on the left, the event
-// picture on the right (below on phones), in the style of the event cards.
-// `event` is in the shape of data/events.js. ended: the event day has gone by, so there is no registration.
+// Top of an event details page: the "Events" tag, title, summary and a white box with when and
+// where on the left; the event picture in a frame with soft circles behind it on the right
+// (below on phones). Indigo band with blue edges, like the events list hero (EventsHero.jsx).
+// `event` is in the shape of data/events.js. ended: the event day has gone by.
 export default function EventHero({ event, ended = false }) {
   return (
-    <section className="bg-[#e4f6fa]">
-      <div className="site-container grid items-center gap-8 py-10 lg:grid-cols-2 lg:gap-14 lg:py-14">
-        {/* Details — they slide in one after another on page load */}
+    <section className="overflow-hidden border-y-4 border-brand-blue bg-[#1d297c] text-white">
+      <div className="site-container grid items-center gap-10 py-10 md:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] lg:grid-cols-[minmax(0,1fr)_minmax(0,32rem)] lg:gap-14 lg:py-14">
         <div>
-          <nav
-            aria-label="Breadcrumb"
-            className="animate-fade-up text-sm motion-reduce:animate-none"
-          >
-            <ol className="flex flex-wrap items-center gap-1.5">
-              <li>
-                <Link href="/" className="hover:text-brand-orange">
-                  Home
-                </Link>
-              </li>
-              <li aria-hidden="true">
-                <ChevronDownIcon className="size-4 -rotate-90 text-brand-orange" />
-              </li>
-              <li>
-                <Link href="/events" className="hover:text-brand-orange">
-                  Events
-                </Link>
-              </li>
-              <li aria-hidden="true">
-                <ChevronDownIcon className="size-4 -rotate-90 text-brand-orange" />
-              </li>
-              <li aria-current="page" className="font-semibold">
-                {event.title}
-              </li>
-            </ol>
-          </nav>
-
-          <p className="mt-5 flex animate-fade-up flex-wrap gap-2 text-sm font-bold text-white [animation-delay:100ms] motion-reduce:animate-none">
-            <span className="bg-brand-orange px-2 py-1">{event.type}</span>
-            {ended && <span className="bg-ink/70 px-2 py-1">Event Ended</span>}
+          <p className="flex animate-fade-up flex-wrap gap-2 text-xs font-semibold motion-reduce:animate-none">
+            <span className="bg-brand-orange px-2 py-1">Events</span>
+            {ended && <span className="bg-white/20 px-2 py-1">Event Ended</span>}
           </p>
-          <h1 className="mt-3 animate-fade-up text-3xl leading-tight font-semibold text-brand-orange [animation-delay:100ms] motion-reduce:animate-none sm:text-4xl lg:text-[2.625rem]">
+          <h1 className="mt-4 max-w-2xl animate-fade-up text-3xl leading-tight font-bold [animation-delay:100ms] motion-reduce:animate-none sm:text-4xl lg:text-[2.75rem]">
             {event.title}
           </h1>
-          <p className="mt-4 max-w-xl animate-fade-up [animation-delay:200ms] motion-reduce:animate-none sm:text-lg">
-            {event.summary}
-          </p>
+          {event.summary && (
+            <p className="mt-4 max-w-xl animate-fade-up text-sm text-white/85 [animation-delay:200ms] motion-reduce:animate-none sm:text-base">
+              {event.summary}
+            </p>
+          )}
 
-          <ul className="mt-6 space-y-3 animate-fade-up [animation-delay:300ms] motion-reduce:animate-none sm:text-lg">
-            <li className={detail}>
+          <div className="mt-6 inline-block animate-fade-up space-y-2 bg-white px-4 py-3 text-ink shadow-[0.3rem_0.3rem_0_var(--color-brand-yellow)] [animation-delay:300ms] motion-reduce:animate-none">
+            <p className={detail}>
               <CalendarIcon className={detailIcon} strokeWidth={1.5} />
               {event.date} | {event.time}
-            </li>
-            <li className={detail}>
+            </p>
+            <p className={detail}>
               <MapPinIcon className={detailIcon} strokeWidth={1.5} />
               {event.location}
-            </li>
-            <li className={detail}>
-              <TicketIcon className={detailIcon} strokeWidth={1.5} />
-              {ended
-                ? "This event has ended"
-                : "Free entry — registration required"}
-            </li>
-          </ul>
-
-          {!ended && (
-            <a
-              href="#register"
-              className="mt-7 inline-block animate-fade-up rounded-md border border-brand-orange bg-brand-orange px-5 py-2.5 font-semibold text-white transition-colors [animation-delay:300ms] hover:bg-transparent hover:text-brand-orange motion-reduce:animate-none"
-            >
-              Register for Free
-            </a>
-          )}
+            </p>
+          </div>
         </div>
 
-        <div className="animate-pop-in border border-black/15 bg-card shadow-[0.5rem_0.5rem_0_var(--color-brand-blue)] [animation-delay:200ms] motion-reduce:animate-none">
-          <Image
-            src={event.image}
-            alt={event.imageAlt ?? ""}
-            width={1200}
-            height={628}
-            sizes="(min-width: 1024px) 45vw, 100vw"
-            preload
-            className="h-auto w-full"
-          />
+        <div className="relative animate-pop-in [animation-delay:200ms] motion-reduce:animate-none">
+          {/* Soft circles peeking out behind the picture (not on phones, where it sits under the text) */}
+          <div
+            aria-hidden="true"
+            className="absolute -top-10 -right-6 left-12 hidden grid-cols-4 gap-3 opacity-30 md:grid"
+          >
+            {Array.from({ length: 8 }, (_, index) => (
+              <span key={index} className="aspect-square rounded-full bg-white" />
+            ))}
+          </div>
+
+          <div className="relative border-2 border-white bg-card shadow-[0.4rem_0.4rem_0_var(--color-brand-yellow)]">
+            <Image
+              src={event.image}
+              alt={event.imageAlt ?? ""}
+              width={1200}
+              height={628}
+              sizes="(min-width: 1024px) 512px, (min-width: 768px) 384px, 100vw"
+              preload
+              className="h-auto w-full"
+            />
+          </div>
         </div>
       </div>
     </section>

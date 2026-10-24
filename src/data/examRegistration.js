@@ -223,3 +223,10 @@ export const registrationPages = [ielts, pte];
 export function getRegistrationPage(exam) {
   return registrationPages.find((page) => page.exam === exam);
 }
+
+// The page whose sign-up form a pop-up shows on the page at `pathname`: PTE on the PTE
+// pages, otherwise IELTS (or the first page). `pages` are the admin's or registrationPages.
+export function registrationPageForPath(pages, pathname) {
+  const exam = /(^|\/)pte(\/|$)/.test(pathname) ? "pte" : "ielts";
+  return pages.find((page) => page.exam === exam) ?? pages[0];
+}

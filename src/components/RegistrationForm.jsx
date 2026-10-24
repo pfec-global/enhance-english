@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useSyncExternalStore } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ChevronDownIcon } from "@/components/icons";
 
 const field =
@@ -42,12 +43,25 @@ function Select({ label, children, ...props }) {
 }
 
 /*
-  "Sign up for … Registration Assistance" card on an exam registration page.
-  `page` comes from data/examRegistration.js; its colours tint the card
-  (pink for IELTS, light blue for PTE).
+  The one sign-up form of the site: on the exam registration, event and contact pages,
+  in the "Book Free Demo Class" and "Make my Own Course" pop-ups and on their pages.
+  `page` comes from data/examRegistration.js (or the admin); its colours tint the card
+  (pink for IELTS, light blue for PTE) and it gives the test modes and dates.
+  - `title` replaces the page's "Sign up for … Registration Assistance";
+    `titleAs` is its heading level ("h1" on a page of its own), `titleId` its id.
+  - `inDialog`: in a pop-up, so the title leaves room for the close button.
+  - `successHref`: the page it leads to once sent, the thank-you page
+    (app/thank-you/page.js); event pages add the event to it.
 */
-export default function RegistrationForm({ page }) {
-  const [sent, setSent] = useState(false);
+export default function RegistrationForm({
+  page,
+  title = page.form.title,
+  titleAs: Title = "h2",
+  titleId,
+  inDialog = false,
+  successHref = "/thank-you",
+}) {
+  const router = useRouter();
 
   // Today's date, known in the browser only (null while the page is built), so
   // the test dates are always the next ones.
@@ -63,8 +77,10 @@ export default function RegistrationForm({ page }) {
   function handleSubmit(event) {
     event.preventDefault();
     // TODO: send the details (new FormData(event.currentTarget)) to the real
-    // registration API once there is one.
-    setSent(true);
+    // registration API once there is one, and only move on once it has been saved.
+    // A pop-up the form is in closes first, so it does not stay open over the thank-you page.
+    event.currentTarget.closest("dialog")?.close();
+    router.push(successHref);
   }
 
   return (
@@ -75,99 +91,113 @@ export default function RegistrationForm({ page }) {
         "--form-border": page.colors.formBorder,
       }}
     >
-      <h2 className="text-center text-xl leading-snug font-bold lg:text-[1.375rem]">
-        {page.form.title}
-      </h2>
+      <Title
+        id={titleId}
+        className={`text-center text-xl leading-snug font-bold lg:text-[1.375rem] ${inDialog ? "px-8" : ""}`}
+      >
+        {title}
+      </Title>
 
-      {sent ? (
-        <p role="status" className="mt-6 rounded-lg bg-white p-5 text-center">
-          <strong className="block text-lg">Thank you!</strong>
-          Our team will call you soon to help with your {page.name}{" "}
-          registration.
-        </p>
-      ) : (
-        <form onSubmit={handleSubmit} className="mt-6 grid gap-4">
-          <input
-            name="name"
-            placeholder="Full Name"
-            aria-label="Full Name"
-            autoComplete="name"
-            required
-            className={field}
-          />
-          <input
-            name="email"
-            type="email"
-            placeholder="Email ID"
-            aria-label="Email ID"
-            autoComplete="email"
-            required
-            className={field}
-          />
-          <input
-            name="phone"
-            type="tel"
-            placeholder="Phone Number"
-            aria-label="Phone Number"
-            autoComplete="tel"
-            required
-            className={field}
-          />
-          {/* The choice and the test dates are left out when the page has none */}
-          {page.form.modes.length > 0 && (
-            <Select name="mode" label={page.form.modeLabel}>
-              {page.form.modes.map((mode) => (
-                <option key={mode}>{mode}</option>
-              ))}
-            </Select>
-          )}
-          {page.examDates.length > 0 && (
-            <Select name="date" label="Test Date">
-              {examDays.map((day) => {
-                const label = day.toLocaleDateString("en-GB", {
-                  weekday: "short",
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                });
-                return <option key={label}>{label}</option>;
-              })}
-            </Select>
-          )}
+      <form onSubmit={handleSubmit} className="mt-6 grid gap-4">
+        {/* Which form was sent: the title, e.g. "Book Your Free Demo Class" */}
+        <input type="hidden" name="form" value={title} />
+        <input
+          name="name"
+          placeholder="Full Name"
+          aria-label="Full Name"
+          autoComplete="name"
+          required
+          className={field}
+        />
+        <input
+          name="email"
+          type="email"
+          placeholder="Email ID"
+          aria-label="Email ID"
+          autoComplete="email"
+          required
+          className={field}
+        />
+        <input
+          name="phone"
+          type="tel"
+          placeholder="Phone Number"
+          aria-label="Phone Number"
+          autoComplete="tel"
+          required
+          className={field}
+        />
+        {/* The choice and the test dates are left out when the page has none */}
+        {page.form.modes.length > 0 && (
+          <Select name="mode" label={page.form.modeLabel}>
+            {page.form.modes.map((mode) => (
+              <option key={mode}>{mode}</option>
+            ))}
+          </Select>
+        )}
+        {page.examDates.length > 0 && (
+          <Select name="date" label="Test Date">
+            {examDays.map((day) => {
+              const label = day.toLocaleDateString("en-GB", {
+                weekday: "short",
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              });
+              return <option key={label}>{label}</option>;
+            })}
+          </Select>
+        )}
 
-          <label className="flex items-start gap-2 text-xs">
+        <label className="flex items-start gap-2.5 text-xs">
+          {/* Orange-edged box with a white tick when checked */}
+          <span className="relative mt-px grid size-4 shrink-0">
             <input
               type="checkbox"
               name="agree"
               required
-              className="mt-0.5 size-4 shrink-0 accent-brand-orange"
+              className="peer size-4 cursor-pointer appearance-none rounded-[2px] border-[1.5px] border-brand-orange bg-white outline-none checked:bg-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange/30"
             />
-            <span>
-              I agree to{" "}
-              <Link
-                href="/privacy-policy"
-                className="text-brand-orange underline"
-              >
-                privacy policy
-              </Link>{" "}
-              and{" "}
-              <Link
-                href="/terms-and-conditions"
-                className="text-brand-orange underline"
-              >
-                Terms of Use
-              </Link>
-            </span>
-          </label>
+            <svg
+              viewBox="0 0 16 16"
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 hidden size-4 text-white peer-checked:block"
+            >
+              <path
+                d="m4 8.5 2.5 2.5L12 5.5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
+          <span>
+            I agree to{" "}
+            <Link
+              href="/privacy-policy"
+              className="text-brand-orange underline"
+            >
+              privacy policy
+            </Link>{" "}
+            and{" "}
+            <Link
+              href="/terms-and-conditions"
+              className="text-brand-orange underline"
+            >
+              Terms of Use
+            </Link>
+          </span>
+        </label>
 
-          <button
-            type="submit"
-            className="cursor-pointer rounded-md border border-brand-orange bg-brand-orange py-2.5 text-sm font-semibold text-white transition-colors hover:bg-transparent hover:text-brand-orange"
-          >
-            Request a Callback
-          </button>
-        </form>
-      )}
+        <button
+          type="submit"
+          className="cursor-pointer rounded-lg border border-brand-orange bg-brand-orange py-2.5 font-semibold text-white transition-colors hover:bg-transparent hover:text-brand-orange"
+        >
+          Request a Callback
+        </button>
+      </form>
     </div>
   );
 }

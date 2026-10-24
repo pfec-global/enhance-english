@@ -3,6 +3,7 @@ import CustomCourseModal from "@/components/CustomCourseModal";
 import DemoClassModal from "@/components/DemoClassModal";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import { registrationPages } from "@/data/examRegistration";
 import { navLinksWithCourses } from "@/data/navLinks";
 import {
   getCourses,
@@ -43,6 +44,8 @@ export default async function RootLayout({ children }) {
     getProgramExams(),
   ]);
   const links = navLinksWithCourses(courses, registrations, exams);
+  // The pop-up sign-up forms use the exam registration pages' test modes and dates
+  const formPages = registrations?.length ? registrations : registrationPages;
 
   return (
     <html
@@ -60,9 +63,9 @@ export default async function RootLayout({ children }) {
         <main className="flex-1">{children}</main>
         <Footer />
         {/* Opens from every "Book Free Demo Class" button (any link to /book-demo) */}
-        <DemoClassModal />
+        <DemoClassModal pages={formPages} />
         {/* Opens from the "Make my Own Course" button (any link to /custom-course) */}
-        <CustomCourseModal />
+        <CustomCourseModal pages={formPages} />
       </body>
     </html>
   );

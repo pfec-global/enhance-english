@@ -42,6 +42,24 @@ export function ArrowRightIcon(props) {
   );
 }
 
+export function ArrowUpRightIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M7 17 17 7M8 7h9v9" />
+    </Icon>
+  );
+}
+
+// The "back" arrow on the Back to Homepage buttons
+export function ReturnIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M9 14 4 9l5-5" />
+      <path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11" />
+    </Icon>
+  );
+}
+
 export function MenuIcon(props) {
   return (
     <Icon {...props}>
@@ -263,6 +281,14 @@ export function InstagramIcon(props) {
   );
 }
 
+export function XIcon(props) {
+  return (
+    <Icon fill="currentColor" stroke="none" {...props}>
+      <path d="M17.8 3h3.1l-6.8 7.7 8 10.3h-6.3l-4.9-6.4L5.3 21H2.2l7.2-8.3L1.8 3h6.4l4.4 5.9L17.8 3Zm-1.1 16.2h1.7L7.4 4.7H5.6l11.1 14.5Z" />
+    </Icon>
+  );
+}
+
 export function TwitterIcon(props) {
   return (
     <Icon fill="currentColor" stroke="none" {...props}>
@@ -314,6 +340,26 @@ export function InfoIcon(props) {
     <Icon {...props}>
       <circle cx="12" cy="12" r="9" />
       <path d="M12 11v5m0-8v.01" />
+    </Icon>
+  );
+}
+
+export function SproutIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M7 20h10M10 20c5.5-2.5.8-6.4 3-10" />
+      <path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8Z" />
+      <path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2Z" />
+    </Icon>
+  );
+}
+
+export function TelescopeIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="m10.1 12.5-6.2 1.3a.9.9 0 0 1-1.1-.7l-.5-2.1a1.1 1.1 0 0 1 .7-1.3l13.5-4.4M13.6 11.7l4.3-.9M16 21l-3.1-6.2M8 21l3.1-6.2M6.2 8.6l1.1 4.5" />
+      <path d="M16.5 5.9A2 2 0 0 1 17.9 3.5l1.1-.3a1 1 0 0 1 1.2.7l1.5 6.1a1 1 0 0 1-.7 1.2l-1.1.3a2 2 0 0 1-2.4-1.5Z" />
+      <circle cx="12" cy="13" r="2" />
     </Icon>
   );
 }

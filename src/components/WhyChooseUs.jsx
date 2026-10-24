@@ -3,7 +3,8 @@ import Reveal from "@/components/Reveal";
 import Slider from "@/components/Slider";
 import { reasons } from "@/data/whyChooseUs";
 
-export default function WhyChooseUs() {
+// `children` (e.g. a call to action) go under the cards.
+export default function WhyChooseUs({ children }) {
   return (
     <section aria-labelledby="why-choose-us" className="bg-surface">
       <div className="site-container py-14 lg:py-16">
@@ -32,6 +33,8 @@ export default function WhyChooseUs() {
             ))}
           </Slider>
         </div>
+
+        {children}
       </div>
     </section>
   );

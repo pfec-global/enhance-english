@@ -14,6 +14,7 @@ export const events = [
     title: "IELTS Grammar Workshop",
     type: "Free Workshop",
     date: "31 Jan 2029",
+    event_date: "2029-01-31",
     time: "11 AM - 12 PM",
     location: "Enhance English Office - Chattogram",
     image: "/image/events/event_1.png",
@@ -36,6 +37,7 @@ export const events = [
     title: "IELTS Speaking Masterclass",
     type: "Free Masterclass",
     date: "7 Feb 2029",
+    event_date: "2029-02-07",
     time: "4 PM - 5:30 PM",
     location: "Enhance English Office - Dhaka",
     image: "/image/events/event_2.png",
@@ -58,6 +60,7 @@ export const events = [
     title: "PTE Mock Test Day",
     type: "Free Mock Test",
     date: "14 Feb 2029",
+    event_date: "2029-02-14",
     time: "10 AM - 1 PM",
     location: "Enhance English Office - Chattogram",
     image: "/image/events/event_3.png",
@@ -80,6 +83,7 @@ export const events = [
     title: "Spoken English Club Meetup",
     type: "Free Club Session",
     date: "21 Feb 2029",
+    event_date: "2029-02-21",
     time: "5 PM - 6 PM",
     location: "Enhance English Office - Dhaka",
     image: "/image/events/event_1.png", // TODO: replace with event_4.png
@@ -97,6 +101,20 @@ export const events = [
     ],
   },
 ].map((event) => ({ ...event, href: `/events/${event.slug}` }));
+
+// The events grouped by month for the timeline on /events, in the shape the admin's
+// /event-months sends: [{ month: "2029-01", label: "Jan", year: 2029, events: [...] }].
+export const eventMonths = Object.values(
+  Object.groupBy(events, (event) => event.event_date.slice(0, 7)),
+).map((monthEvents) => {
+  const date = new Date(`${monthEvents[0].event_date}T00:00:00Z`);
+  return {
+    month: monthEvents[0].event_date.slice(0, 7),
+    label: date.toLocaleString("en-GB", { month: "short", timeZone: "UTC" }),
+    year: date.getUTCFullYear(),
+    events: monthEvents,
+  };
+});
 
 export function getEvent(slug) {
   return events.find((event) => event.slug === slug);

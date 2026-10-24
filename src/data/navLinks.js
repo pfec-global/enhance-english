@@ -161,6 +161,7 @@ export const navLinks = [
       },
     },
   },
+  { label: "Contact Us", href: "/contact", hasDropdown: false },
 ];
 
 // ---------- Course lists from the admin ----------

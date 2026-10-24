@@ -10,9 +10,10 @@ const number =
 
 const divider = "w-px shrink-0 self-stretch bg-brand-orange/50";
 
-export default function Stats() {
+// `className` is the band's background (light grey on the home page, yellow on About Us).
+export default function Stats({ className = "bg-surface" }) {
   return (
-    <section aria-label="Enhance English in numbers" className="bg-surface">
+    <section aria-label="Enhance English in numbers" className={className}>
       {/*
         Everything starts on the same left line as the hero text.
         phones, tablets: three numbers in one row, badge in a second row

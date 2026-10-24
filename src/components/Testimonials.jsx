@@ -15,11 +15,12 @@ import {
 // shown, with its logo and no filter buttons. Until an exam has results of its
 // own (PTE for now), its pages show every result instead.
 // `exams` and `testimonials` are in the shape of data/testimonials.js; the home
-// page passes the admin's (see lib/api.js).
+// page passes the admin's (see lib/api.js). `children` (e.g. a call to action) go under the slider.
 export default function Testimonials({
   exam,
   exams = builtInExams,
   testimonials = builtInTestimonials,
+  children,
 }) {
   // null = show every exam. Clicking the active logo again clears the filter.
   const [chosen, setChosen] = useState(null);
@@ -116,6 +117,8 @@ export default function Testimonials({
             </p>
           )}
         </div>
+
+        {children}
       </div>
     </section>
   );
