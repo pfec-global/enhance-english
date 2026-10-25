@@ -20,6 +20,7 @@ async function fetchApi(path) {
   return (await response.json()).data;
 }
 
+
 // Runs an API call and returns undefined instead of failing, so the page can show its built-in content.
 // cache(): within one page view the same question is only asked once.
 const safely = (load) =>
