@@ -33,6 +33,8 @@ export const metadata = {
   title: "Enhance English | IELTS & PTE Coaching",
   description:
     "Join Enhance English's coaching classes or language clubs and build confidence in English for study, work, and life.",
+  // Kept out of search results for now; set index: true when the site goes live
+  robots: { index: false, follow: false },
 };
 
 export default async function RootLayout({ children }) {

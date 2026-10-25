@@ -17,10 +17,9 @@ const googleLetters = [
 // TODO: this badge is drawn with text — swap it for the official "Google Reviews" image when there is one.
 function GoogleReviewsBadge() {
   return (
-    <p
-      aria-label="Google Reviews, 5 stars"
-      className="shrink-0 rounded-sm bg-white px-3 py-1.5 text-center leading-none shadow-md"
-    >
+    <p className="shrink-0 rounded-sm bg-white px-3 py-1.5 text-center leading-none shadow-md">
+      {/* aria-label is not allowed on a <p>, so the badge's name is hidden text instead */}
+      <span className="sr-only">Google Reviews, 5 stars</span>
       <span
         aria-hidden="true"
         className="block text-2xl font-semibold sm:text-3xl"
