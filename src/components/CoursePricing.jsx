@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useId, useState } from "react";
+import { useState } from "react";
 import { CalendarIcon, CartIcon } from "@/components/icons";
+import MockTestSelect from "@/components/MockTestSelect";
 
 const button =
   "flex items-center gap-3 rounded-sm border border-brand-orange px-4 py-2.5 text-sm font-semibold transition-colors";
@@ -12,7 +13,6 @@ const button =
 // the actual price and the offer are optional (null when the course has none).
 export default function CoursePricing({ course, placement = "hero" }) {
   const mockTestOptions = course.mockTest?.options ?? [];
-  const mockTestSelectId = useId();
   const [selectedTestCount, setSelectedTestCount] = useState(
     () => String(mockTestOptions[0]?.testCount ?? ""),
   );
@@ -32,20 +32,14 @@ export default function CoursePricing({ course, placement = "hero" }) {
   return (
     <>
       {isMockTest && (
-        <div className="mt-5 flex items-center gap-2 text-xs">
-          <label htmlFor={mockTestSelectId}>No. of Mock Tests</label>
-          <select
-            id={mockTestSelectId}
+        <div className="mt-5 flex items-center gap-3 text-xs">
+          <span className="font-medium">No. of Mock Tests</span>
+          <MockTestSelect
+            label="No. of Mock Tests"
+            options={mockTestOptions}
             value={String(selectedMockTestOption.testCount)}
-            onChange={(event) => setSelectedTestCount(event.target.value)}
-            className="cursor-pointer rounded-sm border border-brand-orange bg-white px-2 py-1.5 font-semibold text-ink outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/30"
-          >
-            {mockTestOptions.map((option) => (
-              <option key={option.testCount} value={String(option.testCount)}>
-                {String(option.testCount).padStart(2, "0")}
-              </option>
-            ))}
-          </select>
+            onChange={setSelectedTestCount}
+          />
         </div>
       )}
 
