@@ -48,7 +48,7 @@ export default function BlogHero({ query = "" }) {
 
         <div className="mx-auto w-full max-w-sm animate-fade-up [animation-delay:300ms] motion-reduce:animate-none md:w-[24rem] md:max-w-none lg:w-[31rem]">
           <Image
-            src="/image/blog_hero.png"
+            src="/image/blog-hero.png"
             alt="Smiling Enhance English students"
             width={704}
             height={463}
