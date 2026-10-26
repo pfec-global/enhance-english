@@ -68,7 +68,7 @@ export default function CourseHero({ course }) {
           </div>
 
           <div className="animate-slide-in [animation-delay:300ms] motion-reduce:animate-none">
-            <CoursePricing course={course} />
+            <CoursePricing course={course} placement="hero" />
           </div>
         </div>
 

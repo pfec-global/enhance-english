@@ -85,7 +85,7 @@ export default function CourseCovered({ course }) {
               <h3 className="max-w-[14em] text-2xl leading-tight font-bold lg:text-[1.75rem]">
                 {course.title}
               </h3>
-              <CoursePricing course={course} />
+              <CoursePricing course={course} placement="sidebar" />
             </aside>
           </Reveal>
         </div>
