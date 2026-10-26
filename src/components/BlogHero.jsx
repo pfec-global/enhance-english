@@ -45,6 +45,7 @@ export default function BlogHero({ query = "" }) {
             </button>
           </form>
         </div>
+        
 
         <div className="mx-auto w-full max-w-sm animate-fade-up [animation-delay:300ms] motion-reduce:animate-none md:w-[24rem] md:max-w-none lg:w-[31rem]">
           <Image
