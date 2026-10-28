@@ -105,7 +105,16 @@ export const events = [
 // The events grouped by month for the timeline on /events, in the shape the admin's
 // /event-months sends: [{ month: "2029-01", label: "Jan", year: 2029, events: [...] }].
 export const eventMonths = Object.values(
-  Object.groupBy(events, (event) => event.event_date.slice(0, 7)),
+  events.reduce((groups, event) => {
+    const month = event.event_date.slice(0, 7);
+
+    if (!groups[month]) {
+      groups[month] = [];
+    }
+
+    groups[month].push(event);
+    return groups;
+  }, {})
 ).map((monthEvents) => {
   const date = new Date(`${monthEvents[0].event_date}T00:00:00Z`);
   return {
