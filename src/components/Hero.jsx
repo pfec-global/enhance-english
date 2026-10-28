@@ -64,7 +64,7 @@ export default function Hero() {
               <ArrowRightIcon className="size-5" />
             </Link>
             <Link
-              href="/programs"
+              href="/#ielts-programs"
               className={`${button} border-white hover:bg-white hover:text-brand-blue`}
             >
               Explore Programs

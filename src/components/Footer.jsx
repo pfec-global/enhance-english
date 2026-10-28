@@ -104,7 +104,7 @@ export default function Footer() {
         >
           {linkGroups.map((group) => (
             <div key={group.title}>
-              <h2 className="text-lg font-semibold text-[#c93625] sm:text-brand-orange">
+              <h2 className="text-lg font-semibold text-brand-orange">
                 {group.title}
               </h2>
               <ul className="mt-3 space-y-3">

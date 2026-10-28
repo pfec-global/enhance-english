@@ -1,6 +1,6 @@
 "use client";
 
-import { Children, useEffect, useRef, useState } from "react";
+import { Children, useEffect, useMemo, useRef, useState } from "react";
 
 const left = (element) => element.getBoundingClientRect().left;
 
@@ -64,13 +64,16 @@ export default function Slider({
   const [active, setActive] = useState(0);
   const [pages, setPages] = useState(1);
   const [perView, setPerView] = useState(Infinity);
+  const [nearby, setNearby] = useState(false);
 
-  const slides = Children.toArray(children);
+  const slides = useMemo(() => Children.toArray(children), [children]);
   const count = slides.length;
 
   // Looping shows a second copy of the slides after the originals. When the row
   // reaches the copies it jumps back to the originals, which look the same.
-  const looping = loop && count > 1 && count >= perView;
+  // The copies are only added once the slider is close to the screen, so they
+  // are not built while the page is still loading.
+  const looping = loop && nearby && count > 1 && count >= perView;
   const dots = looping ? count : pages;
 
   // Re-measure when the screen size changes.
@@ -86,6 +89,21 @@ export default function Slider({
       clearTimeout(settleTimerRef.current);
     };
   }, [count]);
+
+  // Notice when the slider is about one screen away (looping only).
+  useEffect(() => {
+    if (!loop) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setNearby(true);
+        observer.disconnect();
+      },
+      { rootMargin: "100% 0px" },
+    );
+    observer.observe(trackRef.current);
+    return () => observer.disconnect();
+  }, [loop]);
 
   // Autoplay
   useEffect(() => {
@@ -208,6 +226,31 @@ export default function Slider({
     ? { active: "bg-brand-yellow", idle: "bg-white/85" }
     : { active: "bg-brand-orange", idle: "bg-brand-orange/25" };
 
+  // Built once, not on every scroll: moving the row only changes the dots.
+  const items = useMemo(
+    () => (
+      <>
+        {slides.map((slide) => (
+          <li key={slide.key} className={`shrink-0 snap-start ${slideClassName}`}>
+            {slide}
+          </li>
+        ))}
+        {looping &&
+          slides.map((slide) => (
+            <li
+              key={`copy-${slide.key}`}
+              aria-hidden="true"
+              inert
+              className={`shrink-0 snap-start ${slideClassName}`}
+            >
+              {slide}
+            </li>
+          ))}
+      </>
+    ),
+    [slides, looping, slideClassName],
+  );
+
   return (
     <>
       {/* On phones the row runs to the screen edges, so the next slide peeks in */}
@@ -241,21 +284,7 @@ export default function Slider({
           canDrag ? "cursor-grab select-none active:cursor-grabbing" : ""
         } ${className}`}
       >
-        {slides.map((slide) => (
-          <li key={slide.key} className={`shrink-0 snap-start ${slideClassName}`}>
-            {slide}
-          </li>
-        ))}
-        {looping &&
-          slides.map((slide) => (
-            <li
-              key={`copy-${slide.key}`}
-              aria-hidden="true"
-              className={`shrink-0 snap-start ${slideClassName}`}
-            >
-              {slide}
-            </li>
-          ))}
+        {items}
       </ul>
 
       {showDots && dots > 1 && (
@@ -270,7 +299,7 @@ export default function Slider({
                 lastTouchRef.current = Date.now();
                 goTo(trackRef.current, index);
               }}
-              className="p-1.5"
+              className="p-2"
             >
               <span
                 className={`block size-2.5 rounded-full transition-colors ${

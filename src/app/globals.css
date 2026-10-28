@@ -3,7 +3,7 @@
 /* Brand tokens — use as bg-brand-blue, text-brand-orange, font-display, etc. */
 @theme inline {
   --color-brand-blue: #00b3e3;
-  --color-brand-orange: #e84b37;
+  --color-brand-orange: #c93625; /* darkened from #e84b37 so white text on it (and it on white) meets WCAG AA 4.5:1 */
   --color-brand-yellow: #f8ca01;
   --color-brand-navy: #100694;
   --color-brand-royal: #0069b3;
