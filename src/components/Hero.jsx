@@ -80,7 +80,8 @@ export default function Hero() {
             alt="Student taking notes in an Enhance English class"
             width={942}
             height={942}
-            sizes="(min-width: 1024px) 30vw, (min-width: 640px) 384px, 78vw"
+            sizes="(min-width: 1024px) 24vw, (min-width: 640px) 320px, 60vw"
+            quality={65}
             preload
             className="h-auto w-full"
           />

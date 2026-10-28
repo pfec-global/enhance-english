@@ -13,7 +13,8 @@ export default function TestimonialCard({ testimonial, examName }) {
         }
         width={2000}
         height={2000}
-        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 85vw"
+        sizes="(min-width: 1024px) 24vw, (min-width: 640px) 36vw, 60vw"
+        quality={65}
         className="aspect-square h-auto w-full transition-transform duration-500 group-hover:scale-105"
       />
     </figure>

@@ -22,7 +22,8 @@ export default function EventCard({ event }) {
           alt=""
           width={1200}
           height={628}
-          sizes="(min-width: 1280px) 25vw, (min-width: 640px) 50vw, 100vw"
+          sizes="(min-width: 1280px) 20vw, (min-width: 640px) 36vw, 60vw"
+          quality={65}
           className="h-auto w-full transition-transform duration-500 group-hover:scale-105"
         />
       </div>

@@ -8,7 +8,11 @@ import Reveal from "@/components/Reveal";
 import StudentReviews from "@/components/StudentReviews";
 import Testimonials from "@/components/Testimonials";
 import WhyChooseUs from "@/components/WhyChooseUs";
-import { coursePageExtras, getCoursePage } from "@/data/coursePages";
+import {
+  coursePageExtras,
+  coursePages,
+  getCoursePage,
+} from "@/data/coursePages";
 import { withProgramExam } from "@/data/programs";
 import { builtInExamPages, examStyles } from "@/data/examInfo";
 import {
@@ -27,6 +31,20 @@ import {
 // - otherwise an exam page, e.g. /ielts/what-is-ielts
 // When the admin cannot be reached, the built-in pages are shown instead
 // (data/coursePages.js, data/examInfo.js). Any other address shows "page not found".
+
+// Generate every built-in course and exam information page during the build so
+// the first visitor receives cached HTML instead of waiting for the admin API.
+export function generateStaticParams() {
+  const pages = [
+    ...coursePages.map(({ program, slug }) => ({ program, course: slug })),
+    ...Object.keys(builtInExamPages).map((path) => {
+      const [program, course] = path.split("/");
+      return { program, course };
+    }),
+  ];
+
+  return [...new Map(pages.map((page) => [`${page.program}/${page.course}`, page])).values()];
+}
 
 // The course at /program/slug with the parts the admin does not manage, or null if there is none
 async function findCourse(program, slug) {

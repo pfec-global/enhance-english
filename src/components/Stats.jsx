@@ -55,7 +55,8 @@ export default function Stats({ className = "bg-surface" }) {
           alt="Official IELTS Registration Center and Associate Member, recognized by British Council IELTS"
           width={1228}
           height={228}
-          sizes="(min-width: 640px) 612px, 100vw"
+          sizes="(min-width: 1280px) 560px, (min-width: 640px) 70vw, 60vw"
+          quality={60}
           className="h-auto w-full max-w-[38.25rem] basis-full xl:min-w-0 xl:shrink xl:basis-auto"
         />
       </div>

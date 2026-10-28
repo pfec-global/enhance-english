@@ -18,6 +18,11 @@ const nextConfig = {
     ];
   },
   images: {
+    // Fill the large 384px → 640px default gap so card-sized images can use a
+    // source close to their rendered width instead of jumping to 640px.
+    imageSizes: [32, 48, 64, 96, 128, 256, 384, 480, 560],
+    qualities: [60, 65, 75],
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
         protocol: blogCmsUrl.protocol.replace(":", ""),

@@ -167,7 +167,8 @@ export default function Header({ links = navLinks }) {
             alt="Enhance English by PFEC"
             width={308}
             height={128}
-            preload
+            fetchPriority="high"
+            loading="eager"
             className="h-11 w-auto sm:h-12 lg:h-16"
           />
         </Link>

@@ -2,8 +2,8 @@ import { cache } from "react";
 import { registrationThemes } from "@/data/examRegistration";
 
 // Content managed in the Enhance English admin (the Laravel app in enhance_english_admin).
-// Its public API lives under /api/v1. Server only. Nothing here is cached for now,
-// so changes made in the admin show on the next page view.
+// Its public API lives under /api/v1. Server only. Public content is revalidated
+// every five minutes so document requests do not wait on the admin for every visit.
 
 const API_URL = (process.env.API_URL || "http://localhost:8010").replace(/\/+$/, "");
 
@@ -12,7 +12,7 @@ const API_URL = (process.env.API_URL || "http://localhost:8010").replace(/\/+$/,
 async function fetchApi(path) {
   const response = await fetch(`${API_URL}/api/v1/${path}`, {
     headers: { Accept: "application/json" },
-    cache: "no-store",
+    next: { revalidate: 300, tags: ["admin-content"] },
     signal: AbortSignal.timeout(8000),
   });
   if (response.status === 404) return null;
