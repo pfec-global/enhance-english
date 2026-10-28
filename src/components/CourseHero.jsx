@@ -6,6 +6,9 @@ import CoursePricing from "@/components/CoursePricing";
 // (orange block on cream for IELTS, blue block on light blue for PTE, purple block
 // on grey for English). English courses show an illustration instead of a photo.
 export default function CourseHero({ course }) {
+  const usePreviousCrop =
+    course.program === "pte" && course.slug === "foundation-to-excellence";
+
   return (
     <section
       className="relative overflow-hidden"
@@ -79,10 +82,7 @@ export default function CourseHero({ course }) {
               course.illustration ? "aspect-[812/758]" : "aspect-square rounded-sm"
             }`}
           >
-            {/*
-              Photo: it is wide, so it is cropped to a square around the student in front.
-              Illustration: shown whole.
-            */}
+            {/* PTE Foundation retains its original crop; other course images show in full. */}
             <Image
               src={course.image}
               alt={course.imageAlt}
@@ -90,9 +90,9 @@ export default function CourseHero({ course }) {
               sizes="(min-width: 1024px) 34vw, (min-width: 512px) 448px, 100vw"
               preload
               className={
-                course.illustration
-                  ? "object-contain"
-                  : "object-cover object-[32%_center]"
+                usePreviousCrop
+                  ? "object-cover object-[32%_center]"
+                  : "object-contain"
               }
             />
           </div>
