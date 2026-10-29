@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { callApi, SIGNED_IN_COOKIE, TOKEN_COOKIE } from "@/lib/session";
+import { callApi, SIGNED_IN_COOKIE, studentIp, TOKEN_COOKIE } from "@/lib/session";
 
 // The website's side of student accounts (called by lib/auth.js): passes each request
 // on to the admin's API and keeps the sign-in in cookies instead of handing the token
@@ -21,13 +21,6 @@ const actions = {
 const signsIn = new Set(["login", "register/verify"]);
 
 const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
-
-// The student's IP address as the reverse proxy in front of this server saw it
-// (nginx: proxy_set_header X-Real-IP $remote_addr), else the last address it added
-function studentIp(request) {
-  const forwarded = request.headers.get("x-forwarded-for")?.split(",").map((part) => part.trim());
-  return request.headers.get("x-real-ip") || forwarded?.at(-1) || undefined;
-}
 
 export async function POST(request, { params }) {
   const action = (await params).path.join("/");

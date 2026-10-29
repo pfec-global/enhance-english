@@ -64,8 +64,18 @@ function storedValue(key, fallback, isValid) {
 
 const empty = [];
 const cart = storedValue("ee-cart", empty, Array.isArray);
-// { code, percent } or null
-const coupon = storedValue("ee-coupon", null, (value) => value === null || typeof value?.percent === "number");
+// Today's date in Bangladesh, e.g. "2026-10-29": the admin's coupons start and end by it
+const todayInBangladesh = () => new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Dhaka" });
+
+// { code, percent, expiresOn } or null. A coupon whose last day has passed is dropped
+// (and so is one saved before coupons came from the admin, which has no expiresOn).
+const coupon = storedValue(
+  "ee-coupon",
+  null,
+  (value) =>
+    value === null ||
+    (typeof value?.percent === "number" && typeof value.expiresOn === "string" && value.expiresOn >= todayInBangladesh()),
+);
 // The order last sent to the payment gateway (see saveLastOrder), or null
 const lastOrder = storedValue("ee-last-order", null, (value) => value === null || typeof value?.id === "string");
 
@@ -95,20 +105,37 @@ export const toAmount = (price) => Number(String(price ?? "").replace(/[^\d.]/g,
 // 7000 -> "7,000"
 export const formatAmount = (amount) => Math.round(amount).toLocaleString("en-US");
 
-// Coupon codes and their extra discount in percent.
-// TODO: check the code with the admin instead, once it has coupons.
-const coupons = { FIRST50: 10 };
-
-// The coupon applied to the cart ({ code, percent }), or null
+// The coupon applied to the cart ({ code, percent, expiresOn }), or null
 export const useCoupon = coupon.use;
 
-// Applies `code` and returns true, or returns false if there is no such coupon
-export function applyCoupon(code) {
-  const clean = code.trim().toUpperCase();
-  const percent = coupons[clean];
-  if (percent === undefined) return false;
-  coupon.write({ code: clean, percent });
-  return true;
+// Checks `code` with the admin (app/api/coupons/check/route.js) and applies it.
+// Throws an Error whose message says why it cannot be used, e.g. "This coupon expired on…".
+// The admin checks the coupon again when the order is paid for.
+export async function applyCoupon(code) {
+  let response;
+  try {
+    response = await fetch("/api/coupons/check", {
+      method: "POST",
+      headers: { Accept: "application/json", "Content-Type": "application/json" },
+      body: JSON.stringify({ code: code.trim() }),
+    });
+  } catch {
+    throw new Error("We could not reach the server. Please check your connection and try again.");
+  }
+
+  const json = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(
+      json.errors?.code?.[0] ||
+        json.message ||
+        (response.status === 429
+          ? "Too many tries. Please wait a minute and try again."
+          : "Something went wrong. Please try again."),
+    );
+  }
+
+  const { code: checkedCode, percentage, expiresOn } = json.data;
+  coupon.write({ code: checkedCode, percent: percentage, expiresOn });
 }
 
 export const removeCoupon = () => coupon.write(null);

@@ -108,18 +108,20 @@ function CartItems({ items }) {
   );
 }
 
-// `fieldProps` and `errorFor` come from the checkout form's useFieldErrors
-function BillingFields({ fieldProps, errorFor }) {
+// `fieldProps` and `errorFor` come from the checkout form's useFieldErrors. `student`
+// is the signed-in student's details (app/checkout/page.js), which fill the fields
+// they match; they can still be changed, e.g. to buy for someone else.
+function BillingFields({ fieldProps, errorFor, student }) {
   const [country, setCountry] = useState("");
   const states = countries.find((option) => option.name === country)?.states;
 
   return (
     <div className="grid gap-4 pt-4 sm:grid-cols-6">
       <Field title="First Name" id="billing-first" error={errorFor("firstName")} className="sm:col-span-3">
-        <input id="billing-first" {...fieldProps("firstName")} name="firstName" placeholder="First Name" autoComplete="given-name" required className={field} />
+        <input id="billing-first" {...fieldProps("firstName")} name="firstName" defaultValue={student?.firstName} placeholder="First Name" autoComplete="given-name" required className={field} />
       </Field>
       <Field title="Last Name" id="billing-last" error={errorFor("lastName")} className="sm:col-span-3">
-        <input id="billing-last" {...fieldProps("lastName")} name="lastName" placeholder="Last Name" autoComplete="family-name" required className={field} />
+        <input id="billing-last" {...fieldProps("lastName")} name="lastName" defaultValue={student?.lastName} placeholder="Last Name" autoComplete="family-name" required className={field} />
       </Field>
 
       {/* The country code and the number share the left half */}
@@ -128,7 +130,7 @@ function BillingFields({ fieldProps, errorFor }) {
           <Select
             id="billing-code"
             name="countryCode"
-            defaultValue="+880"
+            defaultValue={student?.countryCode ?? "+880"}
             autoComplete="tel-country-code"
             placeholder="Code"
             options={countryCodes.map((option) => ({
@@ -142,6 +144,7 @@ function BillingFields({ fieldProps, errorFor }) {
             id="billing-phone"
             {...fieldProps("phone")}
             name="phone"
+            defaultValue={student?.phone}
             type="tel"
             placeholder="Enter Phone Number"
             autoComplete="tel-national"
@@ -153,7 +156,7 @@ function BillingFields({ fieldProps, errorFor }) {
         </Field>
       </div>
       <Field title="Student's Email" id="billing-email" error={errorFor("email")} className="sm:col-span-3">
-        <input id="billing-email" {...fieldProps("email")} name="email" type="email" placeholder="Enter the Student's Email ID" autoComplete="email" required className={field} />
+        <input id="billing-email" {...fieldProps("email")} name="email" type="email" defaultValue={student?.email} placeholder="Enter the Student's Email ID" autoComplete="email" required className={field} />
       </Field>
 
       <Field title="Street Address" id="billing-street" error={errorFor("street")} className="sm:col-span-4">
@@ -252,8 +255,9 @@ function PaymentGateway() {
   the billing details (can be folded away), the payment gateway and, beside them,
   the cart's total and coupon (components/CartSummary.jsx) with "Make Payment".
   Make Payment checks the form, then hands over to the gateway (lib/checkout.js).
+  `student`: the signed-in student's details for the billing fields, or null.
 */
-export default function CheckoutView() {
+export default function CheckoutView({ student }) {
   const formId = useId();
   const { formProps, fieldProps, errorFor } = useFieldErrors();
   const items = useCart();
@@ -345,7 +349,7 @@ export default function CheckoutView() {
             <div
               className={`px-1 pb-1 ${billingOpen && billingSettled ? "overflow-visible" : "overflow-hidden"}`}
             >
-              <BillingFields fieldProps={fieldProps} errorFor={errorFor} />
+              <BillingFields fieldProps={fieldProps} errorFor={errorFor} student={student} />
             </div>
           </div>
         </section>

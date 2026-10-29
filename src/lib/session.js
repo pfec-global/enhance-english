@@ -30,6 +30,13 @@ export async function callApi(path, { method = "GET", body, token, ip } = {}) {
   return { status: response.status, json: await response.json().catch(() => ({})) };
 }
 
+// The student's IP address as the reverse proxy in front of this server saw it
+// (nginx: proxy_set_header X-Real-IP $remote_addr), else the last address it added
+export function studentIp(request) {
+  const forwarded = request.headers.get("x-forwarded-for")?.split(",").map((part) => part.trim());
+  return request.headers.get("x-real-ip") || forwarded?.at(-1) || undefined;
+}
+
 // The signed-in student with their purchased courses (GET /api/v1/me), or null when
 // nobody is signed in or the admin no longer accepts the sign-in. Throws when the
 // admin cannot be reached or fails, so a short outage does not sign anyone out.

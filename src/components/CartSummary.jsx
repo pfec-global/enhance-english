@@ -23,15 +23,21 @@ export default function CartSummary({ items, children }) {
   const coupon = useCoupon();
   const [code, setCode] = useState("");
   const [couponError, setCouponError] = useState(null);
+  const [checking, setChecking] = useState(false);
   const { total, actual, savedPercent, final } = cartTotals(items, coupon);
 
-  function apply(event) {
+  // The admin checks the code (lib/cart.js); its reason is shown if it cannot be used
+  async function apply(event) {
     event.preventDefault();
-    if (applyCoupon(code)) {
+    setChecking(true);
+    setCouponError(null);
+    try {
+      await applyCoupon(code);
       setCode("");
-      setCouponError(null);
-    } else {
-      setCouponError("This coupon code is not valid.");
+    } catch (error) {
+      setCouponError(error.message);
+    } finally {
+      setChecking(false);
     }
   }
 
@@ -58,17 +64,22 @@ export default function CartSummary({ items, children }) {
           <input
             id="coupon"
             value={code}
-            onChange={(event) => setCode(event.target.value)}
+            onChange={(event) => {
+              setCode(event.target.value);
+              setCouponError(null);
+            }}
+            aria-invalid={couponError ? true : undefined}
+            aria-describedby={couponError ? "coupon-error" : undefined}
             placeholder={coupon ? coupon.code : "Enter Coupon Code"}
             autoComplete="off"
             className="min-w-0 flex-1 px-3 py-2 text-sm uppercase outline-none placeholder:normal-case focus:bg-brand-orange/5"
           />
           <button
             type="submit"
-            disabled={!code.trim()}
+            disabled={!code.trim() || checking}
             className="cursor-pointer bg-brand-orange px-4 text-xs font-semibold text-white transition-opacity disabled:cursor-default disabled:opacity-60"
           >
-            Apply
+            {checking ? "Checking…" : "Apply"}
           </button>
         </div>
         <div aria-live="polite">
@@ -90,7 +101,7 @@ export default function CartSummary({ items, children }) {
             </div>
           )}
           {couponError && (
-            <p role="alert" className="mt-2 text-xs text-brand-orange">
+            <p id="coupon-error" role="alert" className="mt-2 text-xs text-brand-orange">
               {couponError}
             </p>
           )}
