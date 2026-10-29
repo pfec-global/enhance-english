@@ -11,12 +11,12 @@ export default function BlogListing({ posts, showCta = true, searchable = true, 
     <section className="bg-[#f9f9f9] py-10 lg:py-14">
       <div
         className={`site-container grid gap-10 lg:items-start lg:gap-8 ${
-          showCta ? "lg:grid-cols-[minmax(0,1fr)_16rem]" : ""
+          showCta ? "lg:grid-cols-[minmax(0,1fr)_20rem]" : ""
         }`}
       >
         <BlogPostList posts={posts} searchable={searchable} emptyText={emptyText} />
         {showCta && (
-          <div className="mx-auto w-full max-w-xs lg:sticky lg:top-28">
+          <div className="mx-auto w-full max-w-sm lg:sticky lg:top-28">
             <BlogSideCta />
           </div>
         )}

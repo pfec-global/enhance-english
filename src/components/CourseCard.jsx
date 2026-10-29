@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AddToCartButton from "@/components/AddToCartButton";
 import Button from "@/components/Button";
 import { CalendarIcon, MonitorIcon } from "@/components/icons";
 
@@ -37,11 +38,12 @@ export default function CourseCard({ course }) {
       <p className="mt-auto pt-5 text-sm">
         Price <strong className="text-2xl">৳{course.price}</strong>
       </p>
-      <div className="mt-2 flex flex-wrap gap-2.5">
+      <div className="mt-2 flex flex-wrap items-center gap-2.5">
         <Button href={`${course.href}#join`}>Join Now</Button>
         <Button href={course.href} variant="outline">
           Learn More
         </Button>
+        <AddToCartButton course={course} />
       </div>
     </article>
   );

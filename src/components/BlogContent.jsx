@@ -8,24 +8,26 @@ import { FaqItem, FaqList } from "@/components/FaqAccordion";
 
 // How each markdown element is drawn. react-markdown also passes a "node" prop, which must not reach the HTML tag.
 const components = {
-  // scroll-mt leaves room for the sticky navbar and the floating "Jump to Topic" box when jumping to a heading
+  // scroll-mt leaves room for the sticky navbar and the floating "Jump to Topic" box when jumping to a heading.
+  // Sizes: h2 18px, h3 17px, h4 16px, the text 16px (at least; the site's sizes shrink on laptops, see globals.css)
   h2: ({ node, ...props }) => (
-    <h2 className="mt-10 scroll-mt-40 text-lg font-bold text-indigo first:mt-0 sm:text-xl" {...props} />
+    <h2 className="mt-10 scroll-mt-40 text-[max(18px,1.125rem)] font-bold text-indigo first:mt-0" {...props} />
   ),
-  h3: ({ node, ...props }) => <h3 className="mt-8 text-base font-bold text-ink sm:text-lg" {...props} />,
-  h4: ({ node, ...props }) => <h4 className="mt-6 text-base font-bold text-ink" {...props} />,
+  h3: ({ node, ...props }) => <h3 className="mt-8 text-[max(17px,1.0625rem)] font-bold text-ink" {...props} />,
+  h4: ({ node, ...props }) => <h4 className="mt-6 text-[max(16px,1rem)] font-bold text-ink" {...props} />,
   h5: ({ node, ...props }) => <h5 className="mt-6 font-bold text-ink" {...props} />,
   h6: ({ node, ...props }) => <h6 className="mt-6 font-semibold text-ink" {...props} />,
   p: ({ node, ...props }) => <p className="mt-4" {...props} />,
   strong: ({ node, ...props }) => <strong className="font-bold text-ink" {...props} />,
-  // Links to other websites open in a new tab; links inside the site use the Next.js router
+  // Links to other websites open in a new tab; links inside the site use the Next.js router.
+  // Red, without an underline; it only shows on hover.
   a: ({ node, href = "", children, ...props }) =>
     /^https?:\/\//.test(href) ? (
-      <a href={href} target="_blank" rel="noopener noreferrer" className="break-words text-accent underline" {...props}>
+      <a href={href} target="_blank" rel="noopener noreferrer" className="break-words text-accent hover:underline" {...props}>
         {children}
       </a>
     ) : (
-      <Link href={href} className="break-words text-accent underline" {...props}>
+      <Link href={href} className="break-words text-accent hover:underline" {...props}>
         {children}
       </Link>
     ),
@@ -60,7 +62,7 @@ const components = {
   // Tables scroll sideways on small screens instead of squeezing their columns
   table: ({ node, ...props }) => (
     <div className="mt-6 overflow-x-auto rounded-lg border border-indigo/15 bg-white">
-      <table className="w-full min-w-[480px] text-left text-sm [&_p]:mt-0" {...props} />
+      <table className="w-full min-w-[480px] text-left text-[max(16px,1rem)] [&_p]:mt-0" {...props} />
     </div>
   ),
   thead: ({ node, ...props }) => <thead className="bg-[#f1f1f4] text-xs font-semibold text-ink" {...props} />,
@@ -85,7 +87,9 @@ const components = {
 // The order of the plugins matters: raw -> sanitize -> heading ids and FAQ.
 export default function BlogContent({ markdown, headings }) {
   return (
-    <article className="min-w-0 text-sm leading-relaxed text-ink/80">
+    // At least 16px: on laptops the site's sizes shrink with the screen (globals.css),
+    // which made text-sm about 11px there, too small to read comfortably.
+    <article className="min-w-0 text-[max(16px,1rem)] leading-relaxed text-ink/80">
       <Markdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw, rehypeSanitize, [rehypeHeadingIds, headings], rehypeFaqAccordion]}

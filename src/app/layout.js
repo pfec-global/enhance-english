@@ -1,8 +1,10 @@
 import { Coiny, Montserrat, Titan_One } from "next/font/google";
+import AuthModal from "@/components/AuthModal";
 import CustomCourseModal from "@/components/CustomCourseModal";
 import DemoClassModal from "@/components/DemoClassModal";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import Toaster from "@/components/Toaster";
 import { registrationPages } from "@/data/examRegistration";
 import { navLinksWithCourses } from "@/data/navLinks";
 import {
@@ -68,6 +70,10 @@ export default async function RootLayout({ children }) {
         <DemoClassModal pages={formPages} />
         {/* Opens from the "Make my Own Course" button (any link to /custom-course) */}
         <CustomCourseModal pages={formPages} />
+        {/* Opens from the "Log In" button (any link to /login, /register or /forgot-password) */}
+        <AuthModal />
+        {/* Messages in the top right corner, e.g. "Added to cart" */}
+        <Toaster />
       </body>
     </html>
   );

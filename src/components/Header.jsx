@@ -5,11 +5,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ScrollProgress from "@/components/ScrollProgress";
+import { useSignedIn } from "@/lib/auth";
+import { useCart } from "@/lib/cart";
 import { navLinks } from "@/data/navLinks";
 import {
   ArrowRightIcon,
   BookOpenIcon,
   CalendarIcon,
+  CartIcon,
   CertificateIcon,
   ChevronDownIcon,
   CloseIcon,
@@ -153,6 +156,12 @@ const demoButton =
 // `links` in the shape of data/navLinks.js; the layout passes them with the admin's courses.
 export default function Header({ links = navLinks }) {
   const pathname = usePathname();
+  const cartCount = useCart().length;
+  // Signed in: "My Profile" in place of "Log In"
+  const signedIn = useSignedIn();
+  const account = signedIn
+    ? { href: "/profile", label: "My Profile" }
+    : { href: "/login", label: "Log In" };
   const [menuOpen, setMenuOpen] = useState(false);
   // Phones: the label of the nav item whose dropdown is open, if any
   const [mobileOpen, setMobileOpen] = useState(null);
@@ -210,6 +219,30 @@ export default function Header({ links = navLinks }) {
             );
           })}
         </nav>
+
+        {/* The cart (app/cart/page.js), with the number of courses in it */}
+        <Link
+          href="/cart"
+          aria-label={cartCount ? `Cart, ${cartCount} ${cartCount === 1 ? "course" : "courses"}` : "Cart"}
+          aria-current={pathname === "/cart" ? "page" : undefined}
+          className={`${roundButton} relative transition-colors hover:bg-brand-orange hover:text-white`}
+        >
+          <CartIcon className="size-5" />
+          {cartCount > 0 && (
+            <span className="absolute -top-1 -right-1 grid h-5 min-w-5 place-items-center rounded-full bg-brand-yellow px-1 text-xs font-bold text-ink">
+              {cartCount}
+            </span>
+          )}
+        </Link>
+
+        {/* "Log In" opens the sign-in pop-up (components/AuthModal.jsx); signed in, it is
+            "My Profile". On phones it lives inside the menu. */}
+        <Link
+          href={account.href}
+          className="hidden rounded-lg border border-white px-4 py-2.5 text-sm font-semibold whitespace-nowrap text-white transition-colors hover:bg-white hover:text-brand-orange sm:block lg:text-base"
+        >
+          {account.label}
+        </Link>
 
         {/* On phones this button lives inside the menu instead */}
         <Link
@@ -318,13 +351,20 @@ export default function Header({ links = navLinks }) {
                 </li>
               );
             })}
-            <li className="py-3">
+            <li className="grid gap-2 py-3">
               <Link
                 href="/book-demo"
                 onClick={() => setMenuOpen(false)}
                 className={`${demoButton} block`}
               >
                 Book Free Demo Class
+              </Link>
+              <Link
+                href={account.href}
+                onClick={() => setMenuOpen(false)}
+                className="rounded-lg border border-brand-orange px-4 py-2.5 text-center font-semibold text-brand-orange"
+              >
+                {account.label}
               </Link>
             </li>
           </ul>

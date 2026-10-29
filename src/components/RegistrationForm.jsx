@@ -4,9 +4,10 @@ import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChevronDownIcon } from "@/components/icons";
+import useFieldErrors from "@/hooks/useFieldErrors";
 
 const field =
-  "w-full rounded-lg border border-(--form-border) bg-white px-3.5 py-2.5 text-sm outline-none placeholder:text-ink/50 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20";
+  "w-full rounded-lg border border-(--form-border) bg-white px-3.5 py-2.5 text-sm outline-none placeholder:text-ink/50 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 aria-invalid:border-brand-orange aria-invalid:bg-brand-orange/5";
 
 // The first `count` exam dates after today. `dates` are "2026-10-23", in order.
 function upcomingExamDays(today, dates, count) {
@@ -21,23 +22,26 @@ function upcomingExamDays(today, dates, count) {
 
 const noSubscription = () => () => {};
 
-// A select with the arrow drawn on top of it.
-function Select({ label, children, ...props }) {
+// A select with the arrow drawn on top of it, and its message (`error`) under it.
+function Select({ label, error, children, ...props }) {
   return (
-    <div className="relative">
-      <select
-        aria-label={label}
-        defaultValue=""
-        required
-        className={`${field} cursor-pointer appearance-none pr-10 invalid:text-ink/50`}
-        {...props}
-      >
-        <option value="" disabled>
-          {label}
-        </option>
-        {children}
-      </select>
-      <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-brand-orange" />
+    <div>
+      <div className="relative">
+        <select
+          aria-label={label}
+          defaultValue=""
+          required
+          className={`${field} cursor-pointer appearance-none pr-10 invalid:text-ink/50`}
+          {...props}
+        >
+          <option value="" disabled>
+            {label}
+          </option>
+          {children}
+        </select>
+        <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-brand-orange" />
+      </div>
+      {error}
     </div>
   );
 }
@@ -62,6 +66,8 @@ export default function RegistrationForm({
   successHref = "/thank-you",
 }) {
   const router = useRouter();
+  // Messages under the fields instead of the browser's bubbles
+  const { formProps, fieldProps, errorFor } = useFieldErrors();
 
   // Today's date, known in the browser only (null while the page is built), so
   // the test dates are always the next ones.
@@ -98,45 +104,69 @@ export default function RegistrationForm({
         {title}
       </Title>
 
-      <form onSubmit={handleSubmit} className="mt-6 grid gap-4">
+      <form {...formProps} onSubmit={handleSubmit} className="mt-6 grid gap-4">
         {/* Which form was sent: the title, e.g. "Book Your Free Demo Class" */}
         <input type="hidden" name="form" value={title} />
-        <input
-          name="name"
-          placeholder="Full Name"
-          aria-label="Full Name"
-          autoComplete="name"
-          required
-          className={field}
-        />
-        <input
-          name="email"
-          type="email"
-          placeholder="Email ID"
-          aria-label="Email ID"
-          autoComplete="email"
-          required
-          className={field}
-        />
-        <input
-          name="phone"
-          type="tel"
-          placeholder="Phone Number"
-          aria-label="Phone Number"
-          autoComplete="tel"
-          required
-          className={field}
-        />
+        <div>
+          <input
+            name="name"
+            {...fieldProps("name")}
+            placeholder="Full Name"
+            aria-label="Full Name"
+            autoComplete="name"
+            required
+            className={field}
+          />
+          {errorFor("name")}
+        </div>
+        <div>
+          <input
+            name="email"
+            {...fieldProps("email")}
+            type="email"
+            placeholder="Email ID"
+            aria-label="Email ID"
+            autoComplete="email"
+            required
+            className={field}
+          />
+          {errorFor("email")}
+        </div>
+        <div>
+          <input
+            name="phone"
+            {...fieldProps("phone")}
+            type="tel"
+            placeholder="Phone Number"
+            aria-label="Phone Number"
+            autoComplete="tel"
+            pattern="\+?[\d\s\-]{7,16}"
+            title="Please enter a valid phone number."
+            required
+            className={field}
+          />
+          {errorFor("phone")}
+        </div>
         {/* The choice and the test dates are left out when the page has none */}
         {page.form.modes.length > 0 && (
-          <Select name="mode" label={page.form.modeLabel}>
+          <Select
+            name="mode"
+            label={page.form.modeLabel}
+            error={errorFor("mode")}
+            {...fieldProps("mode")}
+          >
             {page.form.modes.map((mode) => (
               <option key={mode}>{mode}</option>
             ))}
           </Select>
         )}
         {page.examDates.length > 0 && (
-          <Select name="date" label="Test Date">
+          <Select
+            name="date"
+            label="Test Date"
+            error={errorFor("date")}
+            {...fieldProps("date")}
+          >
             {examDays.map((day) => {
               const label = day.toLocaleDateString("en-GB", {
                 weekday: "short",
@@ -149,47 +179,52 @@ export default function RegistrationForm({
           </Select>
         )}
 
-        <label className="flex items-start gap-2.5 text-xs">
-          {/* Orange-edged box with a white tick when checked */}
-          <span className="relative mt-px grid size-4 shrink-0">
-            <input
-              type="checkbox"
-              name="agree"
-              required
-              className="peer size-4 cursor-pointer appearance-none rounded-[2px] border-[1.5px] border-brand-orange bg-white outline-none checked:bg-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange/30"
-            />
-            <svg
-              viewBox="0 0 16 16"
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 hidden size-4 text-white peer-checked:block"
-            >
-              <path
-                d="m4 8.5 2.5 2.5L12 5.5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+        <div>
+          <label className="flex items-start gap-2.5 text-xs">
+            {/* Orange-edged box with a white tick when checked */}
+            <span className="relative mt-px grid size-4 shrink-0">
+              <input
+                type="checkbox"
+                name="agree"
+                {...fieldProps("agree")}
+                data-required="Please agree to the privacy policy and Terms of Use."
+                required
+                className="peer size-4 cursor-pointer appearance-none rounded-[2px] border-[1.5px] border-brand-orange bg-white outline-none checked:bg-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange/30"
               />
-            </svg>
-          </span>
-          <span>
-            I agree to{" "}
-            <Link
-              href="/privacy-policy"
-              className="text-brand-orange underline"
-            >
-              privacy policy
-            </Link>{" "}
-            and{" "}
-            <Link
-              href="/terms-and-conditions"
-              className="text-brand-orange underline"
-            >
-              Terms of Use
-            </Link>
-          </span>
-        </label>
+              <svg
+                viewBox="0 0 16 16"
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 hidden size-4 text-white peer-checked:block"
+              >
+                <path
+                  d="m4 8.5 2.5 2.5L12 5.5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+            <span>
+              I agree to{" "}
+              <Link
+                href="/privacy-policy"
+                className="text-brand-orange underline"
+              >
+                privacy policy
+              </Link>{" "}
+              and{" "}
+              <Link
+                href="/terms-and-conditions"
+                className="text-brand-orange underline"
+              >
+                Terms of Use
+              </Link>
+            </span>
+          </label>
+          {errorFor("agree")}
+        </div>
 
         <button
           type="submit"

@@ -20,7 +20,7 @@ export default function BlogDetailBody({ content, showCta = false, cta = {}, ban
           Without promo cards the content takes the full width. */}
       <div
         className={`site-container grid gap-10 lg:items-start ${
-          hasSidebar ? "lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-12" : ""
+          hasSidebar ? "lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-12" : ""
         }`}
       >
         {/* The "Jump to Topic" box floats inside this column, so it needs to be next to the content */}
@@ -33,7 +33,7 @@ export default function BlogDetailBody({ content, showCta = false, cta = {}, ban
 
         {/* The sidebar floats beside the content while scrolling (desktop only - on smaller screens it is below the content) */}
         {hasSidebar && (
-          <div className="mx-auto w-full max-w-xs space-y-6 lg:sticky lg:top-28">
+          <div className="mx-auto w-full max-w-sm space-y-6 lg:sticky lg:top-28">
             {showCta && <BlogSideCta {...cta} />}
             {banners.map((banner) => (
               <PromoBanner key={banner.title} {...banner} />

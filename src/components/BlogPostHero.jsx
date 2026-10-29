@@ -60,7 +60,8 @@ export default function BlogPostHero({ post }) {
           {post.summary && (
             <div>
               <h2 className="text-sm text-accent">Summary</h2>
-              <p className="mt-1 text-sm text-ink/85">{post.summary}</p>
+              {/* At least 16px, like the post's text (components/BlogContent.jsx) */}
+              <p className="mt-1 text-[max(16px,1rem)] text-ink/85">{post.summary}</p>
             </div>
           )}
           <ShareLinks title={post.title} />

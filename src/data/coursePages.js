@@ -31,7 +31,7 @@ const sharedDetails = (program) => ({
   actualPrice: "24,000",
   offer: { label: "Limited Time Offer:", value: "35% Discount" },
   effectivePrice: "22,000",
-  buyHref: "/checkout", // TODO: link to the real payment page
+  buyHref: "/checkout", // adds the course to the cart and opens the checkout
   demoHref: "/book-demo",
 
   // "What's Covered?" cards.
@@ -108,7 +108,7 @@ const englishDetails = {
   actualPrice: "24,000",
   offer: { label: "Limited Time Offer:", value: "35% Discount" },
   effectivePrice: "22,000",
-  buyHref: "/checkout", // TODO: link to the real payment page
+  buyHref: "/checkout", // adds the course to the cart and opens the checkout
   demoHref: "/book-demo",
 
   covered: [

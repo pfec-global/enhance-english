@@ -380,3 +380,106 @@ export function HeartHandshakeIcon(props) {
     </Icon>
   );
 }
+
+// Password rules (components/AuthPanel.jsx): a tick or a cross in a circle
+export function CircleCheckIcon(props) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="10" />
+      <path d="m8 12 3 3 5-6" />
+    </Icon>
+  );
+}
+
+export function CircleXIcon(props) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="10" />
+      <path d="m15 9-6 6M9 9l6 6" />
+    </Icon>
+  );
+}
+
+export function EyeIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" />
+      <circle cx="12" cy="12" r="3" />
+    </Icon>
+  );
+}
+
+export function EyeOffIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M10.7 5.1A9.8 9.8 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-2.2 3.1M6.6 6.6A16.6 16.6 0 0 0 2 12s3.6 7 10 7a9.7 9.7 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2M2 2l20 20" />
+    </Icon>
+  );
+}
+
+// Profile page buttons (app/profile/page.js): "Change Password" and "Get Help"
+export function KeyIcon(props) {
+  return (
+    <Icon {...props}>
+      <circle cx="7.5" cy="15.5" r="5.5" />
+      <path d="m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3" />
+    </Icon>
+  );
+}
+
+export function HelpCircleIcon(props) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01" />
+    </Icon>
+  );
+}
+
+// "Remove all" in the cart (components/CartView.jsx)
+export function TrashIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6" />
+    </Icon>
+  );
+}
+
+// "Make Payment" at the checkout (components/CheckoutView.jsx)
+export function CreditCardIcon(props) {
+  return (
+    <Icon {...props}>
+      <rect x="2" y="5" width="20" height="14" rx="2" />
+      <path d="M2 10h20M6 15h4" />
+    </Icon>
+  );
+}
+
+// A country without a flag (the checkout's "Other", components/CheckoutView.jsx)
+export function GlobeIcon(props) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20" />
+    </Icon>
+  );
+}
+
+// "Download Invoice" (app/payment-success/page.js)
+export function DownloadIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M12 3v12m-5-5 5 5 5-5M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+    </Icon>
+  );
+}
+
+// Copy to the clipboard (components/CopyButton.jsx)
+export function CopyIcon(props) {
+  return (
+    <Icon {...props}>
+      <rect x="9" y="9" width="12" height="12" rx="2" />
+      <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" />
+    </Icon>
+  );
+}
